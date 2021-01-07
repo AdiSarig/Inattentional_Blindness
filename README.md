@@ -10,7 +10,7 @@ All stimuli will be presented on a 1920 x 1080 TFT LCD VPIXX display monitor wit
 
 
 
-![](https://github.com/AdiSarig/Inattentional_Blindness/issues/1#issue-781247115)
+![](https://user-images.githubusercontent.com/74588101/103888048-bdb21280-50ec-11eb-967e-b6f22aed1636.png)
 
 
 
