@@ -1,6 +1,4 @@
-function [FixTime,ImTime, RT, Resp, corr, Tim, Tfix,nextImTime]=run_trial(imName, disc1, disc2, disc3,...
-    disc4,Tfix, nextImTime, CorrAns, Resp1im, Resp2im,...
-    Resp3im,Resp1d,Resp2d)
+function [Trial]=run_trial(session,Trial, prevTrial)
 
 % The script below is identical to the one used for the Biderman & Mudrik,
 % 2017 study (includng sections which could have probably been programmed
@@ -23,9 +21,7 @@ function [FixTime,ImTime, RT, Resp, corr, Tim, Tfix,nextImTime]=run_trial(imName
 % https://www.vpixx.com/manuals/psychtoolbox/html/PROPixxDemo5.html
 % https://vpixx.com/vocal/introduction-to-registers-and-schedules/
 
-global ImCont refreshRate ImDurForFlip ifi
-global w center fixation vpix_trig phase
-global addFix minFix start_exp_ptb start_exp_vpixx
+global w phase
 
 %% definitions
 Screen(w,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);             % this enables us to use the alpha transparency
@@ -34,33 +30,34 @@ ResponsePixx('StartNow',1);
 %% Read stimuli
 
 % image
-image      =  imread(imName);
+image      =  imread(Trial.imName);
 imTex      =  Screen('MakeTexture',w,image);
 
 % discs
-disc1Tex   =  Screen('MakeTexture',w,disc1);
-disc2Tex   =  Screen('MakeTexture',w,disc2);
-disc3Tex   =  Screen('MakeTexture',w,disc3);
-disc4Tex   =  Screen('MakeTexture',w,disc4);
+disc1Tex   =  Screen('MakeTexture',w,Trial.discs.n1);
+disc2Tex   =  Screen('MakeTexture',w,Trial.discs.n2);
+disc3Tex   =  Screen('MakeTexture',w,Trial.discs.n3);
+disc4Tex   =  Screen('MakeTexture',w,Trial.discs.n4);
 
-fixTex=Screen('MakeTexture',w,fixation);
+fixTex=Screen('MakeTexture',w,session.stimuli.fixation);
 
-vpix_trig_im_tex=Screen('MakeTexture',w,vpix_trig(:,1:8,:));
-vpix_trig_fix_tex=Screen('MakeTexture',w,vpix_trig(:,9:16,:));
+vpix_trig_im_tex=Screen('MakeTexture',w,session.stimuli.triggers.image);
+vpix_trig_fix_tex=Screen('MakeTexture',w,session.stimuli.triggers.fixation);
 
 %% Draw STIMULI - Image + discs
 
-Screen('DrawTexture',w, imTex,[],[],[],[], ImCont);
+Screen('DrawTexture',w, imTex,[],[],[],[], session.params.stimContrast);
 
-discSize=[0,0,size(disc1,1),size(disc1,2)];
-disc1Loc=CenterRectOnPointd(discSize,center(1)-200,center(2)-200);
-Screen('DrawTexture',w, disc1Tex,[],disc1Loc,[],[], ImCont);
-disc2Loc=CenterRectOnPointd(discSize,center(1)+200,center(2)-200);
-Screen('DrawTexture',w, disc2Tex,[],disc2Loc,[],[], ImCont);
-disc3Loc=CenterRectOnPointd(discSize,center(1)-200,center(2)+200);
-Screen('DrawTexture',w, disc3Tex,[],disc3Loc,[],[], ImCont);
-disc4Loc=CenterRectOnPointd(discSize,center(1)+200,center(2)+200);
-Screen('DrawTexture',w, disc4Tex,[],disc4Loc,[],[], ImCont);
+position = session.params.screen.pos;
+discSize=[0,0,size(Trial.discs.n1,1),size(Trial.discs.n1,2)];
+disc1Loc=CenterRectOnPointd(discSize,position.ULdisc(1),position.ULdisc(2));
+Screen('DrawTexture',w, disc1Tex,[],disc1Loc,[],[], session.params.stimContrast);
+disc2Loc=CenterRectOnPointd(discSize,position.URdisc(1),position.URdisc(2));
+Screen('DrawTexture',w, disc2Tex,[],disc2Loc,[],[], session.params.stimContrast);
+disc3Loc=CenterRectOnPointd(discSize,position.LLdisc(1),position.LLdisc(2));
+Screen('DrawTexture',w, disc3Tex,[],disc3Loc,[],[], session.params.stimContrast);
+disc4Loc=CenterRectOnPointd(discSize,position.LRdisc(1),position.LRdisc(2));
+Screen('DrawTexture',w, disc4Tex,[],disc4Loc,[],[], session.params.stimContrast);
 
 Screen('DrawTexture',w,vpix_trig_im_tex,[],[0 0 8 1]);
 
@@ -69,84 +66,85 @@ Screen('DrawTexture',w,vpix_trig_im_tex,[],[0 0 8 1]);
 Datapixx('EnablePixelMode');
 Datapixx('RegWr');
 
-pixelTrigger = [255 0 255 0 255 0 255 0;0 255 0 255 0 255 0 255;0 0 0 0 0 0 0 0];
+pixelTrigger = double([session.stimuli.triggers.image(:,:,1);session.stimuli.triggers.image(:,:,2);session.stimuli.triggers.image(:,:,3)]);
 Datapixx('SetMarker');
 Datapixx('RegWrPixelSync',pixelTrigger);
 
 % Screen('Flip',w,start_exp_ptb-start_exp_vpixx+nextImTime);             % present the stimulus
-Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',nextImTime));
+Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',prevTrial.ExpImTime));
 
 Datapixx('RegWrRd');
-Tim=Datapixx('GetMarker');
+Trial.ImTime = Datapixx('GetMarker');
 
-delta = Tim-Tfix;
-numberOfFrames = ceil(delta*refreshRate);
-FixTime = numberOfFrames/refreshRate;
+delta = Trial.ImTime-prevTrial.FixTime;
+numberOfFrames = ceil(delta*session.params.timing.refreshRate);
+Trial.FixDur = numberOfFrames/session.params.timing.refreshRate;
 
 %% Fixation
 
 Screen('DrawTexture',w, fixTex);
 Screen('DrawTexture',w, vpix_trig_fix_tex,[],[0 0 8 1]);
 
-pixelTrigger = [0 0 0 0 0 0 0 0;0 255 0 255 0 255 0 255;255 0 255 0 255 0 255 0];
+pixelTrigger = double([session.stimuli.triggers.fixation(:,:,1);session.stimuli.triggers.fixation(:,:,2);session.stimuli.triggers.fixation(:,:,3)]);
 Datapixx('SetMarker');
 Datapixx('RegWrPixelSync',pixelTrigger);
 
 % Screen('Flip',w,start_exp_ptb-start_exp_vpixx+Tim+ImDurForFlip);
-Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',Tim+ImDurForFlip));
+Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',Trial.ImTime+session.params.timing.ImDurForFlip));
 
 Datapixx('RegWrRd');
-Tfix=Datapixx('GetMarker');
-delta=Tfix-Tim;
+Trial.FixTime=Datapixx('GetMarker');
+delta=Trial.FixTime-Trial.ImTime;
 
-numberOfFrames = ceil(delta*refreshRate);
-ImTime = numberOfFrames/refreshRate;
+numberOfFrames = ceil(delta*session.params.timing.refreshRate);
+Trial.ImDur = numberOfFrames/session.params.timing.refreshRate;
 Screen('close');
 
 %% Get Response
 
-fixDur=rand(1)*addFix + minFix;
-fixFrames = round(fixDur/ifi);
-nextImTime=Tfix + ifi*(fixFrames-0.5);
+tempFixDur=rand(1)*session.params.timing.addFix + session.params.timing.minFix;
+fixFrames = round(tempFixDur/session.params.timing.ifi);
+Trial.ExpImTime=Trial.FixTime + session.params.timing.ifi*(fixFrames-0.5);
 % respTime = 0;Response = 0;
 
-[Response, respTime] = ResponsePixx('GetLoggedResponses',2,1,ifi*(fixFrames-0.5));
+[Response, Trial.RTfromStart] = ResponsePixx('GetLoggedResponses',2,1,session.params.timing.ifi*(fixFrames-0.5));
 
 % while ~any(Response) && respTime < nextImTime 
 %     [Response,respTime] = ResponsePixx('GetButtons');
 % end
 
 if ~any(Response) %no response
-    corr = -1;
-    Resp = -1; 
-    RT = -1;
+    Trial.Accuracy = -1;
+    Trial.Response = -1; 
+    Trial.RT = -1;
+    Trial.RTfromStart = -1;
 else
     Response=Response(1,:);
-    RT = respTime(1) - Tfix - 0.005; % there is a deviation between markers and the display, stimuli are actually presented 5ms after marker time
+    Trial.RT = Trial.RTfromStart(1) - Trial.FixTime - 0.005; % there is a deviation between markers and the display, stimuli are actually presented 5ms after marker time
     if phase==3  % face/house/noise responses
-        if find(Response) == Resp1im %face stim
-            Resp=1;
-            corr = +(CorrAns==Resp);
-        elseif find(Response) == Resp2im %house stim
-            Resp=2;
-            corr = +(CorrAns==Resp);
-        elseif find(Response) == Resp3im %noise stim
-            Resp=3;
-            corr = +(CorrAns==Resp);
+        if find(Response) == session.params.response.face %face stim
+            Trial.Response=1;
+            Trial.Accuracy = +(Trial.CorrAns==Trial.Response);
+        elseif find(Response) == session.params.response.house %house stim
+            Trial.Response=2;
+            Trial.Accuracy = +(Trial.CorrAns==Trial.Response);
+        elseif find(Response) == session.params.response.noise %noise stim
+            Trial.Response=3;
+            Trial.Accuracy = +(Trial.CorrAns==Trial.Response);
         else % wrong button
-            Resp = 99;
-            corr = 0;
+            Trial.Response = 99;
+            Trial.Accuracy = 0;
         end
     else
-        if find(Response) == Resp1d % same orientation
-            Resp=1;
-            corr = +(CorrAns==Resp);
-        elseif find(Response) == Resp2d % changed orientation
-            Resp=2;
-            corr = +(CorrAns==Resp);
+        if find(Response) == session.params.response.discSame % same orientation
+            Trial.Response=1;
+            Trial.Accuracy = +(Trial.CorrAns==Trial.Response);
+        elseif find(Response) == session.params.response.discDiff % changed orientation
+            Trial.Response=2;
+            Trial.Accuracy = +(Trial.CorrAns==Trial.Response);
         else % wrong button
-            Resp = 99;
-            corr = 0;
+            Trial.Response = 99;
+            Trial.Accuracy = 0;
         end
     end
 end  

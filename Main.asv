@@ -8,10 +8,11 @@ function Main()
 % -----------------------------------------------------
 
 %% TO DO
-% Fix timing issues
+% Fix timing - check vpixx in the lab
 % Add post phase questions - find out how to create a text box
-% Add TTL by initBIO
-% Adjust response box: http://psychtoolbox.org/docs/ResponsePixx
+% Organize and add comments
+% add ttl ind for: im 1/2/3, orientation h/v, change y/n, location 1/2/3/4
+% adjust response box: http://psychtoolbox.org/docs/ResponsePixx
 
 %%
 global phase debug w

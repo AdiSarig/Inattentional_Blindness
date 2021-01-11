@@ -1,24 +1,22 @@
-function [InfoTiming,Response] = blockInfo(Resp1d,DiscQuest1,DiscQuest2,Resp1im,ImQuest1,ImQuest2,textColor,RespboxRight)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+function [InfoTiming,Response] = blockInfo(session)
 
-global phase vpix_trig w
+global phase w
+
 % Response=0;
 ResponsePixx('StartNow',1);
 Datapixx('EnablePixelMode');
 Datapixx('RegWr');
 
-vpix_trig_info_tex=Screen('MakeTexture',w,vpix_trig(:,17:24,:));
+vpix_trig = session.stimuli.triggers.info;
+vpix_trig_info_tex=Screen('MakeTexture',w,vpix_trig);
 Screen('DrawTexture',w,vpix_trig_info_tex,[],[0 0 8 1]);
-pixelTrigger = [255 0 255 0 255 0 255 0;0 0 0 0 0 0 0 0;0 255 0 255 0 255 0 255];
+pixelTrigger = double([vpix_trig(:,:,1);vpix_trig(:,:,2);vpix_trig(:,:,3)]);
 Datapixx('RegWrPixelSync',pixelTrigger);
 
+instructions=session.params.procedure.instructions;
 if phase~=3
-    if Resp1d==RespboxRight
-        DrawFormattedText(w, DiscQuest1, 'center', 'center', textColor);
-    else
-        DrawFormattedText(w, DiscQuest2, 'center', 'center', textColor);
-    end
+    DrawFormattedText(w,instructions.disc , 'center', 'center', session.params.screen.text.colour);
+    
     Datapixx('SetMarker');
     Screen('Flip',w);
     Datapixx('RegWrRd');
@@ -30,11 +28,8 @@ if phase~=3
 %         [Response] = ResponsePixx('GetButtons');
 %     end
 else
-    if Resp1im==RespboxRight
-        DrawFormattedText(w, ImQuest1, 'center', 'center', textColor);
-    else
-        DrawFormattedText(w, ImQuest2, 'center', 'center', textColor);
-    end
+    DrawFormattedText(w,instructions.image , 'center', 'center', session.params.screen.text.colour);
+
     Datapixx('SetMarker');
     Screen('Flip',w);
     Datapixx('RegWrRd');
