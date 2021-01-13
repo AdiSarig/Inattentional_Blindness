@@ -64,6 +64,7 @@ response.abortKey = RespboxTop;         % exit exp
 params.response = response;
 
 %% Initialize procedure
+procedure = load('PracList.mat');
 procedure.numBlocks = 5;
 procedure.numTrials = 72;
 procedure.numStim = 12; % number of different stimuli for each type (face/house/noise); must be multiplication of 4
@@ -79,7 +80,7 @@ procedure.instructions.End   =  'Thank you for your participation in the experim
 params.procedure = procedure;
 
 %% Pathway
-params.defaultpath = 'G:\My Drive\MudrikLab020818\Experiments\Triangulating_consciousness\Inattentional_Blindness\Experiment\Development';  % change this according to your folder structure
+params.defaultpath = 'G:\My Drive\MudrikLab020818\Experiments\Triangulating_consciousness\Inattentional_Blindness\Experiment\Development\RunExp';  % change this according to your folder structure
 params.stimFolder = 'stimuli';  % change this according to your folder structure
 
 %%

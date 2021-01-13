@@ -25,8 +25,8 @@ if ~isOpen
     error('VIEWPixx not connected! Please check connection and try again');
 end
 PsychDataPixx('Open');
-ResponsePixx('Close');
-ResponsePixx('Open');
+% ResponsePixx('Close');
+% ResponsePixx('Open');
 
 %% Initialize session
 session = initSession('Inattentional_Blindness');
@@ -40,8 +40,6 @@ session = initSession('Inattentional_Blindness');
 % clc;                        % Clear Matlab/Octave window:
 AssertOpenGL;                 % check for Opengl compatibility, abort otherwise
 rand('state',sum(100*clock)); % Reseed the random-number generator for each expt.
-
-load('PracList.mat');
 
 KbCheck;                      % Do dummy calls to GetSecs, WaitSecs, KbCheck
 WaitSecs(0.1);

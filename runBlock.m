@@ -3,7 +3,7 @@ function [session] = runBlock(session,phase,block)
 global w
 
 if phase==0
-    trialList=PracList;
+    trialList=session.params.procedure.PracList;
 else
     trialList=session.Phase(phase).phaseTrialList(:,:,block);
 end
