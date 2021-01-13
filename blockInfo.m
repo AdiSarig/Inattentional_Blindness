@@ -1,11 +1,15 @@
 function [InfoTiming,Response] = blockInfo(session)
 
 global phase w
-
+ResponsePixx('Close');
+ResponsePixx('Open');
 % Response=0;
-ResponsePixx('StartNow',1);
+
 Datapixx('EnablePixelMode');
 Datapixx('RegWr');
+Datapixx('DisableDoutDinLoopback');
+Datapixx('RegWr');
+ResponsePixx('StartNow',1);
 
 vpix_trig = session.stimuli.triggers.info;
 vpix_trig_info_tex=Screen('MakeTexture',w,vpix_trig);
@@ -24,12 +28,12 @@ if phase~=3
     
     [Response] = ResponsePixx('GetLoggedResponses',2);
     Response=Response(1,:);
-%     while ~any(Response)
-%         [Response] = ResponsePixx('GetButtons');
-%     end
+    %     while ~any(Response)
+    %         [Response] = ResponsePixx('GetButtons');
+    %     end
 else
     DrawFormattedText(w,instructions.image , 'center', 'center', session.params.screen.text.colour);
-
+    
     Datapixx('SetMarker');
     Screen('Flip',w);
     Datapixx('RegWrRd');
@@ -37,9 +41,9 @@ else
     
     [Response] = ResponsePixx('GetLoggedResponses',2);
     Response=Response(1,:);
-%     while ~any(Response)
-%         [Response] = ResponsePixx('GetButtons');
-%     end
+    %     while ~any(Response)
+    %         [Response] = ResponsePixx('GetButtons');
+    %     end
 end
 
 % ResponsePixx('StopNow',1);
