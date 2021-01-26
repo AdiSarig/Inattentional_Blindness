@@ -1,6 +1,6 @@
 function stimuli = initStimuli(params)
 
-stimuli.fixation = imread(sprintf('%s%c%s%cfixation.tif',params.defaultpath,filesep, params.stimFolder, filesep));
+stimuli.fixation = imread(sprintf('%s%c%s%cfixation.tif',params.defaultpath,filesep, params.stimuli.stimFolder, filesep));
 
 vpix_trig=uint8([255 0 255 0 255 0 255 0 0 0 0 0 0 0 0 0 255 0 255 0 255 0 255 0]);
 vpix_trig(:,:,2)=uint8([0 255 0 255 0 255 0 255 0 255 0 255 0 255 0 255 0 0 0 0 0 0 0 0]);

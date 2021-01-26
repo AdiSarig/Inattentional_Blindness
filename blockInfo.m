@@ -19,7 +19,7 @@ Datapixx('RegWrPixelSync',pixelTrigger);
 
 instructions=session.params.procedure.instructions;
 if phase~=3
-    DrawFormattedText(w,instructions.disc , 'center', 'center', session.params.screen.text.colour);
+    DrawFormattedText(w,instructions.disc , 'center', 'center', session.params.stimuli.text.colour);
     
     Datapixx('SetMarker');
     Screen('Flip',w);
@@ -32,7 +32,7 @@ if phase~=3
     %         [Response] = ResponsePixx('GetButtons');
     %     end
 else
-    DrawFormattedText(w,instructions.image , 'center', 'center', session.params.screen.text.colour);
+    DrawFormattedText(w,instructions.image , 'center', 'center', session.params.stimuli.text.colour);
     
     Datapixx('SetMarker');
     Screen('Flip',w);

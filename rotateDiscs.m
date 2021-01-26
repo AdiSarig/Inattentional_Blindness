@@ -2,7 +2,7 @@ function [disc1,disc2,disc3,disc4] = rotateDiscs(orientation,change,location,par
 % This function assignes each disc it's right orientation based on the
 % trial specifications.
 
-disc=imread(sprintf('%s%c%s%cdisc_modified.tif',params.defaultpath,filesep, params.stimFolder, filesep));
+disc=imread(sprintf('%s%c%s%cdisc_modified.tif',params.defaultpath,filesep, params.stimuli.stimFolder, filesep));
 if orientation==2 % change to horizontal
     disc=imrotate(disc,90);
 end

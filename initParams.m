@@ -73,10 +73,10 @@ params.procedure = procedure;
 stimuli.stimContrast = 0.4;
 stimuli.stimFolder = 'stimuli';  % change this according to your folder structure
 stimuli.pos.CTR = round(screen.dim.pix/2); %[720 450]; % center of the screen in pixels
-stimuli.pos.ULdisc = screen.pos.CTR-200;
-stimuli.pos.URdisc = [screen.pos.CTR(1)+200 screen.pos.CTR(2)-200];
-stimuli.pos.LLdisc = [screen.pos.CTR(1)-200 screen.pos.CTR(2)+200];
-stimuli.pos.LRdisc = screen.pos.CTR+200;
+stimuli.pos.ULdisc = stimuli.pos.CTR-200;
+stimuli.pos.URdisc = [stimuli.pos.CTR(1)+200 stimuli.pos.CTR(2)-200];
+stimuli.pos.LLdisc = [stimuli.pos.CTR(1)-200 stimuli.pos.CTR(2)+200];
+stimuli.pos.LRdisc = stimuli.pos.CTR+200;
 stimuli.text.font = 'Comic Sans MS';
 stimuli.text.size = 24;
 stimuli.text.colour = 0;
@@ -85,7 +85,7 @@ params.stimuli = stimuli;
 
 %% Pathway
 params.defaultpath = 'G:\My Drive\MudrikLab020818\Experiments\Triangulating_consciousness\Inattentional_Blindness\Experiment\Development';  % change this according to your folder structure
-params.stimFolder = 'stimuli';  % change this according to your folder structure
+params.expFolder = 'RunExp';  % change this according to your folder structure
 
 end
 
