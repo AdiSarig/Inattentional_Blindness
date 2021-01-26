@@ -72,7 +72,7 @@ params.procedure = procedure;
 %% Stimuli
 stimuli.stimContrast = 0.4;
 stimuli.stimFolder = 'stimuli';  % change this according to your folder structure
-stimuli.pos.CTR = round(screen.dim.pix/2); %[720 450]; % center of the screen in pixels
+stimuli.pos.CTR = round(screen.rect([3,4])/2); %[720 450]; % center of the screen in pixels
 stimuli.pos.ULdisc = stimuli.pos.CTR-200;
 stimuli.pos.URdisc = [stimuli.pos.CTR(1)+200 stimuli.pos.CTR(2)-200];
 stimuli.pos.LLdisc = [stimuli.pos.CTR(1)-200 stimuli.pos.CTR(2)+200];
