@@ -107,7 +107,7 @@ fixFrames = round(tempFixDur/session.params.timing.ifi);
 Trial.ExpImTime=Trial.FixTime + session.params.timing.ifi*(fixFrames-0.5);
 % respTime = 0;Response = 0;
 
-[Response, Trial.RTfromStart] = ResponsePixx('GetLoggedResponses',2,1,session.params.timing.ifi*(fixFrames-0.5));
+[Response, Trial.RTfromStart] = ResponsePixx('GetLoggedResponses',2,1,session.params.timing.ifi*(fixFrames-0.5)-0.05);
 
 % while ~any(Response) && respTime < nextImTime 
 %     [Response,respTime] = ResponsePixx('GetButtons');
