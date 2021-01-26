@@ -13,17 +13,7 @@ screen.dim.cm = [53.1,29.9]; % screen dimensions in cm [W, H]
 screen.dim.pix = [screen.res.width screen.res.height]; % screen dimensions in pix
 screen.dim.deg = [47.74,27.98];% screen dimensions in deg at 50cm
 screen.dim.ppd = 33.11; % pixels per degree at 60cm view distance
-screen.pos.CTR = round(screen.dim.pix/2); %[720 450]; % center of the screen in pixels
-screen.pos.ULdisc = screen.pos.CTR-200;
-screen.pos.URdisc = [screen.pos.CTR(1)+200 screen.pos.CTR(2)-200];
-screen.pos.LLdisc = [screen.pos.CTR(1)-200 screen.pos.CTR(2)+200];
-screen.pos.LRdisc = screen.pos.CTR+200;
-% screenParams.pos.txtOffset = [-round(cw28/2),-round(ch28/2)]; % lower left corner of 1deg square centered at x,y
-% screenParams.pos.FIX = screen.pos.CTR + screen.pos.txtOffset;
 screen.rgbGamma = [1 1 1]; % gamma correction, if any
-screen.text.font = 'Comic Sans MS';
-screen.text.size = 24;
-screen.text.colour = 0;
 
 params.screen = screen;
 
@@ -79,11 +69,23 @@ procedure.instructions.End   =  'Thank you for your participation in the experim
 
 params.procedure = procedure;
 
+%% Stimuli
+stimuli.stimContrast = 0.4;
+stimuli.stimFolder = 'stimuli';  % change this according to your folder structure
+stimuli.pos.CTR = round(screen.dim.pix/2); %[720 450]; % center of the screen in pixels
+stimuli.pos.ULdisc = screen.pos.CTR-200;
+stimuli.pos.URdisc = [screen.pos.CTR(1)+200 screen.pos.CTR(2)-200];
+stimuli.pos.LLdisc = [screen.pos.CTR(1)-200 screen.pos.CTR(2)+200];
+stimuli.pos.LRdisc = screen.pos.CTR+200;
+stimuli.text.font = 'Comic Sans MS';
+stimuli.text.size = 24;
+stimuli.text.colour = 0;
+
+params.stimuli = stimuli;
+
 %% Pathway
-params.defaultpath = 'G:\My Drive\MudrikLab020818\Experiments\Triangulating_consciousness\Inattentional_Blindness\Experiment\Development\RunExp';  % change this according to your folder structure
+params.defaultpath = 'G:\My Drive\MudrikLab020818\Experiments\Triangulating_consciousness\Inattentional_Blindness\Experiment\Development';  % change this according to your folder structure
 params.stimFolder = 'stimuli';  % change this according to your folder structure
 
-%%
-params.stimContrast = 0.4;
 end
 
