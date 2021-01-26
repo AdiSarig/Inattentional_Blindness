@@ -10,7 +10,8 @@ function Main()
 %% TO DO
 % Fix timing issues
 % Add post phase questions - find out how to create a text box
-% Add TTL by initBIO
+% Add TTL by initBIO: http://psychtoolbox.org/docs/PsychImaging
+%                     http://psychtoolbox.org/docs/PsychDataPixx
 % Adjust response box: http://psychtoolbox.org/docs/ResponsePixx
 
 %%
@@ -55,7 +56,7 @@ for phase=0:3
 end
 
 %% Save data
-fileName = sprintf('%s%cdata%cIB_Sub_%d',session.params.defaultpath,filesep,filesep,session.subjnum);
+fileName = sprintf('..%cdata%cIB_Sub_%d',filesep,filesep,session.subjnum);
 save(fileName,'session');
 
 %% Thank you screen
