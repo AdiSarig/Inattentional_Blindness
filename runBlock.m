@@ -60,6 +60,7 @@ if phase~=0 % don't save practice data
     FixTimeCell            = num2cell([Trials.FixTime] - session.Phase(phase).startExpVpixx);
     [Trials.FixTime]       = FixTimeCell{:};
     RTfromStartCell        = num2cell([Trials.RTfromStart] - session.Phase(phase).startExpVpixx);
+    RTfromStartCell([Trials.RTfromStart]<0)={-1};
     [Trials.RTfromStart]   = RTfromStartCell{:};
     
     % save trials into session struct
