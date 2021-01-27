@@ -11,7 +11,7 @@ Trial.imName = sprintf('%s%c%s%c%d_%d.pcx',session.params.defaultpath,...
     trialParam(2));
 
 [Trial.discs.n1,Trial.discs.n2,Trial.discs.n3,Trial.discs.n4]=rotateDiscs...
-    (trialParam(3),trialParam(4),trialParam(5),session.params); % inputs: orientation v/h, change s/d, location 1/2/3/4
+    (trialParam(3),trialParam(4),trialParam(5),session.stimuli.Disc); % inputs: orientation v/h, change s/d, location 1/2/3/4
 
 Trial.ExpImTime  = [];
 Trial.ImTime  = [];

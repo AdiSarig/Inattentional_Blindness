@@ -33,33 +33,22 @@ ResponsePixx('StartNow',1);
 image      =  imread(Trial.imName);
 imTex      =  Screen('MakeTexture',w,image);
 
-% discs
-disc1Tex   =  Screen('MakeTexture',w,Trial.discs.n1);
-disc2Tex   =  Screen('MakeTexture',w,Trial.discs.n2);
-disc3Tex   =  Screen('MakeTexture',w,Trial.discs.n3);
-disc4Tex   =  Screen('MakeTexture',w,Trial.discs.n4);
-
-fixTex=Screen('MakeTexture',w,session.stimuli.fixation);
-
-vpix_trig_im_tex=Screen('MakeTexture',w,session.stimuli.triggers.image);
-vpix_trig_fix_tex=Screen('MakeTexture',w,session.stimuli.triggers.fixation);
-
 %% Draw STIMULI - Image + discs
 
 Screen('DrawTexture',w, imTex,[],[],[],[], session.params.stimuli.stimContrast);
 
 position = session.params.stimuli.pos;
-discSize=[0,0,size(Trial.discs.n1,1),size(Trial.discs.n1,2)];
-disc1Loc=CenterRectOnPointd(discSize,position.ULdisc(1),position.ULdisc(2));
-Screen('DrawTexture',w, disc1Tex,[],disc1Loc,[],[], session.params.stimuli.stimContrast);
-disc2Loc=CenterRectOnPointd(discSize,position.URdisc(1),position.URdisc(2));
-Screen('DrawTexture',w, disc2Tex,[],disc2Loc,[],[], session.params.stimuli.stimContrast);
-disc3Loc=CenterRectOnPointd(discSize,position.LLdisc(1),position.LLdisc(2));
-Screen('DrawTexture',w, disc3Tex,[],disc3Loc,[],[], session.params.stimuli.stimContrast);
-disc4Loc=CenterRectOnPointd(discSize,position.LRdisc(1),position.LRdisc(2));
-Screen('DrawTexture',w, disc4Tex,[],disc4Loc,[],[], session.params.stimuli.stimContrast);
+% discSize=[0,0,size(Trial.discs.n1,1),size(Trial.discs.n1,2)];
+disc1Loc=CenterRectOnPointd(session.stimuli.Disc.discSize,position.ULdisc(1),position.ULdisc(2));
+Screen('DrawTexture',w, Trial.discs.n1,[],disc1Loc,[],[], session.params.stimuli.stimContrast);
+disc2Loc=CenterRectOnPointd(session.stimuli.Disc.discSize,position.URdisc(1),position.URdisc(2));
+Screen('DrawTexture',w, Trial.discs.n2,[],disc2Loc,[],[], session.params.stimuli.stimContrast);
+disc3Loc=CenterRectOnPointd(session.stimuli.Disc.discSize,position.LLdisc(1),position.LLdisc(2));
+Screen('DrawTexture',w, Trial.discs.n3,[],disc3Loc,[],[], session.params.stimuli.stimContrast);
+disc4Loc=CenterRectOnPointd(session.stimuli.Disc.discSize,position.LRdisc(1),position.LRdisc(2));
+Screen('DrawTexture',w, Trial.discs.n4,[],disc4Loc,[],[], session.params.stimuli.stimContrast);
 
-Screen('DrawTexture',w,vpix_trig_im_tex,[],[0 0 8 1]);
+Screen('DrawTexture',w,session.stimuli.triggers.imageTex,[],[0 0 8 1]);
 
 %% Present stimuli
 
@@ -82,8 +71,8 @@ Trial.FixDur = numberOfFrames/session.params.timing.refreshRate;
 
 %% Fixation
 
-Screen('DrawTexture',w, fixTex);
-Screen('DrawTexture',w, vpix_trig_fix_tex,[],[0 0 8 1]);
+Screen('DrawTexture',w, session.stimuli.fixation.fixTex);
+Screen('DrawTexture',w, session.stimuli.triggers.fixationTex,[],[0 0 8 1]);
 
 pixelTrigger = double([session.stimuli.triggers.fixation(:,:,1);session.stimuli.triggers.fixation(:,:,2);session.stimuli.triggers.fixation(:,:,3)]);
 Datapixx('SetMarker');
@@ -98,7 +87,6 @@ delta=Trial.FixTime-Trial.ImTime;
 
 numberOfFrames = ceil(delta*session.params.timing.refreshRate);
 Trial.ImDur = numberOfFrames/session.params.timing.refreshRate;
-Screen('close');
 
 %% Get Response
 
