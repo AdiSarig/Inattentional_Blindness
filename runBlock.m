@@ -1,6 +1,6 @@
 function [session] = runBlock(session,phase,block)
 
-global w
+global w debug
 
 if phase==0
     trialList=session.params.procedure.PracList;
@@ -69,6 +69,12 @@ if phase~=0 % don't save practice data
     
     % save trials into session struct
     session.Phase(phase).Blocks(block).trials   = Trials;
+    
+    % deviation test
+    if debug
+        test = [Trials(2:end).ImTime] - [Trials(1:end-1).ExpImTime];
+        aveDev = mean(test);
+    end
 end
 
 end
