@@ -64,6 +64,7 @@ DrawFormattedText(w, session.params.procedure.instructions.End, 'center', 'cente
 Screen('Flip',w);
 WaitSecs(MessDur);
 KbWait;
+ResponsePixx('Close');
 Screen('CloseAll');
 ListenChar(0);
 

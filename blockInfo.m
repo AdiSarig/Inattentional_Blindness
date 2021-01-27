@@ -46,7 +46,7 @@ else
     %     end
 end
 
-% ResponsePixx('StopNow',1);
-
+ResponsePixx('StopNow',1);
+ResponsePixx('Close');
 end
 
