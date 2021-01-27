@@ -51,6 +51,7 @@ disc4Loc=CenterRectOnPointd(session.stimuli.Disc.discSize,position.LRdisc(1),pos
 Screen('DrawTexture',w, Trial.discs.n4,[],disc4Loc,[],[], session.params.stimuli.stimContrast);
 
 Screen('DrawTexture',w,session.stimuli.triggers.imageTex,[],[0 0 8 1]);
+Screen('FrameRect', w, [0 0 0 255*session.params.stimuli.stimContrast], [session.params.stimuli.pos.CTR-400 session.params.stimuli.pos.CTR+400],2);
 
 %% Present stimuli
 
@@ -75,6 +76,7 @@ Trial.FixDur = numberOfFrames/session.params.timing.refreshRate;
 
 Screen('DrawTexture',w, session.stimuli.fixation.fixTex);
 Screen('DrawTexture',w, session.stimuli.triggers.fixationTex,[],[0 0 8 1]);
+Screen('FrameRect', w, [0 0 0 255*session.params.stimuli.stimContrast], [session.params.stimuli.pos.CTR-400 session.params.stimuli.pos.CTR+400],2);
 
 pixelTrigger = double([session.stimuli.triggers.fixation(:,:,1);session.stimuli.triggers.fixation(:,:,2);session.stimuli.triggers.fixation(:,:,3)]);
 Datapixx('SetMarker');
