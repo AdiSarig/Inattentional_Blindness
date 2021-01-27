@@ -49,7 +49,7 @@ if phase~=0 % don't save practice data
     
     % calc the last fixation duration
     Datapixx('SetMarker');
-    Screen('Flip',w);
+    Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',Trials(trialnum).ExpImTime));
     Datapixx('RegWrRd');
     lastFixTime=Datapixx('GetMarker');
     delta=lastFixTime-Trials(end).ImTime;
