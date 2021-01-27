@@ -95,7 +95,7 @@ fixFrames = round(tempFixDur/session.params.timing.ifi);
 Trial.ExpImTime=Trial.FixTime + session.params.timing.ifi*(fixFrames-0.5);
 % respTime = 0;Response = 0;
 
-[Response, Trial.RTfromStart] = ResponsePixx('GetLoggedResponses',2,1,session.params.timing.ifi*(fixFrames-0.5)-0.05);
+[Response, RTfromStart] = ResponsePixx('GetLoggedResponses',2,1,session.params.timing.ifi*(fixFrames-0.5)-0.05);
 
 % while ~any(Response) && respTime < nextImTime 
 %     [Response,respTime] = ResponsePixx('GetButtons');
@@ -108,7 +108,8 @@ if ~any(Response) %no response
     Trial.RTfromStart = -1;
 else
     Response=Response(1,:);
-    Trial.RT = Trial.RTfromStart(1) - Trial.FixTime - 0.005; % there is a deviation between markers and the display, stimuli are actually presented 5ms after marker time
+    Trial.RTfromStart = RTfromStart(1);
+    Trial.RT = Trial.RTfromStart - Trial.FixTime - 0.005; % there is a deviation between markers and the display, stimuli are actually presented 5ms after marker time
     if phase==3  % face/house/noise responses
         if find(Response) == session.params.response.face %face stim
             Trial.Response=1;
