@@ -30,6 +30,8 @@ Datapixx('RegWrRd');
 prevTrial.FixTime=Datapixx('GetMarker'); % start of block
 prevTrial.ExpImTime=prevTrial.FixTime + rand(1)*session.params.timing.addFix + session.params.timing.minFix;
 
+Trials(size(trialList,1)) = initTrial(session,trialList(1,:),phase); % pre allocation
+
 for trialnum=1:ntrials
     % Initialize trial
     Trials(trialnum) = initTrial(session,trialList(trialnum,:),phase);
