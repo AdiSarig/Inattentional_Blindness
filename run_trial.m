@@ -21,7 +21,7 @@ function [Trial]=run_trial(session,Trial, prevTrial)
 % https://www.vpixx.com/manuals/psychtoolbox/html/PROPixxDemo5.html
 % https://vpixx.com/vocal/introduction-to-registers-and-schedules/
 
-global w phase
+global w
 
 %% definitions
 Screen(w,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);             % this enables us to use the alpha transparency
@@ -56,7 +56,7 @@ Datapixx('RegWrPixelSync',pixelTrigger);
 
 % Screen('Flip',w,start_exp_ptb-start_exp_vpixx+nextImTime);             % present the stimulus
 Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',prevTrial.ExpImTime));
-
+tic
 Datapixx('RegWrRd');
 Trial.ImTime = Datapixx('GetMarker');
 
@@ -73,7 +73,7 @@ Screen('FrameRect', w, [0 0 0 255*session.params.stimuli.stimContrast], [session
 pixelTrigger = double([session.stimuli.triggers.fixation(:,:,1);session.stimuli.triggers.fixation(:,:,2);session.stimuli.triggers.fixation(:,:,3)]);
 Datapixx('SetMarker');
 Datapixx('RegWrPixelSync',pixelTrigger);
-
+x=toc;
 % Screen('Flip',w,start_exp_ptb-start_exp_vpixx+Tim+ImDurForFlip);
 Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',Trial.ImTime+session.params.timing.ImDurForFlip));
 
@@ -89,7 +89,7 @@ Trial.ImDur = numberOfFrames/session.params.timing.refreshRate;
 tempFixDur=rand(1)*session.params.timing.addFix + session.params.timing.minFix;
 fixFrames = round(tempFixDur/session.params.timing.ifi);
 Trial.ExpImTime=Trial.FixTime + session.params.timing.ifi*(fixFrames-0.5);
-% respTime = 0;Response = 0;
+% RTfromStart = 0;Response = 0;
 
 [Response, RTfromStart] = ResponsePixx('GetLoggedResponses',2,1,session.params.timing.ifi*(fixFrames-0.5)-0.05);
 

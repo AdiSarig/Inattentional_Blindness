@@ -2,6 +2,7 @@ function [session] = runBlock(session,phase,block)
 
 global w debug
 
+%% Assign trial list
 if phase==0
     trialList=session.params.procedure.PracList;
 else
