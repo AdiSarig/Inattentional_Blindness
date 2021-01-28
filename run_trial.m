@@ -25,8 +25,6 @@ global w phase
 
 %% definitions
 Screen(w,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);             % this enables us to use the alpha transparency
-ResponsePixx('Close');
-ResponsePixx('Open');
 ResponsePixx('StartNow',1);
 
 %% Draw STIMULI - Image + discs
@@ -107,5 +105,5 @@ else
 end
 
   ResponsePixx('StopNow',1);
-  ResponsePixx('Close');
+
 end

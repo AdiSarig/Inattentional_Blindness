@@ -1,9 +1,6 @@
 function [InfoTiming,Response] = blockInfo(session)
 
 global phase w
-ResponsePixx('Close');
-ResponsePixx('Open');
-% Response=0;
 
 Datapixx('EnablePixelMode');
 Datapixx('RegWr');
@@ -47,6 +44,6 @@ else
 end
 
 ResponsePixx('StopNow',1);
-ResponsePixx('Close');
+
 end
 

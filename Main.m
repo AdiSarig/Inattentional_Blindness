@@ -26,8 +26,8 @@ if ~isOpen
     error('VIEWPixx not connected! Please check connection and try again');
 end
 PsychDataPixx('Open');
-% ResponsePixx('Close');
-% ResponsePixx('Open');
+ResponsePixx('Close');
+ResponsePixx('Open');
 
 %% Initialize session
 session = initSession('Inattentional_Blindness');
