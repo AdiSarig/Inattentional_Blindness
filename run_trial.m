@@ -36,13 +36,13 @@ Screen('DrawTexture',w, Trial.imTex,[],[],[],[], session.params.stimuli.stimCont
 position = session.params.stimuli.pos;
 % discSize=[0,0,size(Trial.discs.n1,1),size(Trial.discs.n1,2)];
 disc1Loc=CenterRectOnPointd(session.stimuli.Disc.discSize,position.ULdisc(1),position.ULdisc(2));
-Screen('DrawTexture',w, Trial.discs.n1,[],disc1Loc,[],[], session.params.stimuli.stimContrast);
+Screen('DrawTexture',w, Trial.discTex.n1,[],disc1Loc,[],[], session.params.stimuli.stimContrast);
 disc2Loc=CenterRectOnPointd(session.stimuli.Disc.discSize,position.URdisc(1),position.URdisc(2));
-Screen('DrawTexture',w, Trial.discs.n2,[],disc2Loc,[],[], session.params.stimuli.stimContrast);
+Screen('DrawTexture',w, Trial.discTex.n2,[],disc2Loc,[],[], session.params.stimuli.stimContrast);
 disc3Loc=CenterRectOnPointd(session.stimuli.Disc.discSize,position.LLdisc(1),position.LLdisc(2));
-Screen('DrawTexture',w, Trial.discs.n3,[],disc3Loc,[],[], session.params.stimuli.stimContrast);
+Screen('DrawTexture',w, Trial.discTex.n3,[],disc3Loc,[],[], session.params.stimuli.stimContrast);
 disc4Loc=CenterRectOnPointd(session.stimuli.Disc.discSize,position.LRdisc(1),position.LRdisc(2));
-Screen('DrawTexture',w, Trial.discs.n4,[],disc4Loc,[],[], session.params.stimuli.stimContrast);
+Screen('DrawTexture',w, Trial.discTex.n4,[],disc4Loc,[],[], session.params.stimuli.stimContrast);
 
 Screen('DrawTexture',w,session.stimuli.triggers.imageTex,[],[0 0 8 1]);
 Screen('FrameRect', w, [0 0 0 255*session.params.stimuli.stimContrast], [session.params.stimuli.pos.CTR-400 session.params.stimuli.pos.CTR+400],2);
