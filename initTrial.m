@@ -10,7 +10,15 @@ Trial.imName = sprintf('%s%c%s%c%d_%d.pcx',session.params.defaultpath,...
     filesep, session.params.stimuli.stimFolder, filesep, trialParam(1),...
     trialParam(2));
 
-[Trial.discs.n1,Trial.discs.n2,Trial.discs.n3,Trial.discs.n4]=rotateDiscs...
+if Trial.ImageType==1
+    Trial.imTex = session.stimuli.image(trialParam(2)).face;
+elseif Trial.ImageType==2
+    Trial.imTex = session.stimuli.image(trialParam(2)).house;
+else
+    Trial.imTex = session.stimuli.image(trialParam(2)).noise;
+end
+
+[Trial.discTex.n1,Trial.discTex.n2,Trial.discTex.n3,Trial.discTex.n4]=rotateDiscs...
     (trialParam(3),trialParam(4),trialParam(5),session.stimuli.Disc); % inputs: orientation v/h, change s/d, location 1/2/3/4
 
 Trial.ExpImTime  = [];

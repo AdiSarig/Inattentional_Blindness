@@ -29,15 +29,9 @@ ResponsePixx('Close');
 ResponsePixx('Open');
 ResponsePixx('StartNow',1);
 
-%% Read stimuli
-
-% image
-image      =  imread(Trial.imName);
-imTex      =  Screen('MakeTexture',w,image);
-
 %% Draw STIMULI - Image + discs
 
-Screen('DrawTexture',w, imTex,[],[],[],[], session.params.stimuli.stimContrast);
+Screen('DrawTexture',w, Trial.imTex,[],[],[],[], session.params.stimuli.stimContrast);
 
 position = session.params.stimuli.pos;
 % discSize=[0,0,size(Trial.discs.n1,1),size(Trial.discs.n1,2)];

@@ -8,7 +8,15 @@ else
     trialList=session.Phase(phase).phaseTrialList(:,:,block);
 end
 
-% Starting Message
+%% Initialize block
+ntrials=size(trialList,1);
+Trials(size(trialList,1)) = initTrial(session,trialList(1,:),phase); % pre allocation
+for trialnum=1:ntrials 
+    % Initialize all trials within a block
+    Trials(trialnum) = initTrial(session,trialList(trialnum,:),phase);
+end
+
+%% Starting Message
 [~,Response] = blockInfo(session);
 
 % an option to stop the experiment: escape key
@@ -17,8 +25,7 @@ if Response(session.params.response.abortKey)
     error('Exp stopped running'); % find a better way to do so
 end
 
-%% Initialize block
-ntrials=size(trialList,1);
+%% Start block
 if phase~=0
     [session.Phase(phase).Blocks(block).startBlockPtb,session.Phase(phase).Blocks(block).startBlockVpixx] = PsychDataPixx('GetPreciseTime'); % synchronize system and vpixx clocks
 else
@@ -30,16 +37,11 @@ Datapixx('RegWrRd');
 prevTrial.FixTime=Datapixx('GetMarker'); % start of block
 prevTrial.ExpImTime=prevTrial.FixTime + rand(1)*session.params.timing.addFix + session.params.timing.minFix;
 
-Trials(size(trialList,1)) = initTrial(session,trialList(1,:),phase); % pre allocation
-
-for trialnum=1:ntrials
-    % Initialize trial
-    Trials(trialnum) = initTrial(session,trialList(trialnum,:),phase);
-    
+%% Run block
+for trialnum=1:ntrials  
     % Present stimuli
     Trials(trialnum)=run_trial(session,Trials(trialnum),prevTrial);
     prevTrial = Trials(trialnum);
-    
 end % of trial loop
 
 if phase~=0 % don't save practice data
