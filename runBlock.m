@@ -44,7 +44,12 @@ for trialnum=1:ntrials
     prevTrial = Trials(trialnum);
 end % of trial loop
 
+%% Save block
 if phase~=0 % don't save practice data
+    for trialnum=1:ntrials
+        Trials(trialnum)=saveResponse(session,Trials(trialnum),phase);
+    end
+    
     % move up one trial all fixDur
     FixDurCell = {Trials(2:end).FixDur,0};
     [Trials.FixDur] = FixDurCell{:}; 
