@@ -2,7 +2,7 @@ function [InfoTiming,Response] = blockInfo(session)
 
 global phase w
 
-Datapixx('EnablePixelMode');
+Datapixx('EnablePixelMode'); % 174
 Datapixx('RegWr');
 Datapixx('DisableDoutDinLoopback');
 Datapixx('RegWr');

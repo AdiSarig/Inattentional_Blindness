@@ -56,7 +56,7 @@ Datapixx('RegWrPixelSync',pixelTrigger);
 
 % Screen('Flip',w,start_exp_ptb-start_exp_vpixx+nextImTime);             % present the stimulus
 Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',prevTrial.ExpImTime));
-tic
+
 Datapixx('RegWrRd');
 Trial.ImTime = Datapixx('GetMarker');
 
@@ -73,7 +73,7 @@ Screen('FrameRect', w, [0 0 0 255*session.params.stimuli.stimContrast], [session
 pixelTrigger = double([session.stimuli.triggers.fixation(:,:,1);session.stimuli.triggers.fixation(:,:,2);session.stimuli.triggers.fixation(:,:,3)]);
 Datapixx('SetMarker');
 Datapixx('RegWrPixelSync',pixelTrigger);
-x=toc;
+
 % Screen('Flip',w,start_exp_ptb-start_exp_vpixx+Tim+ImDurForFlip);
 Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',Trial.ImTime+session.params.timing.ImDurForFlip));
 
