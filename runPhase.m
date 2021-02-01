@@ -1,5 +1,9 @@
 function [session] = runPhase(session,phase)
 
+global w
+
+session.stimuli = initStimuli(session.params);
+
 if phase==0
     PsychDataPixx('GetPreciseTime');
     [session] = runBlock(session,phase,1);
@@ -18,7 +22,9 @@ end
 
 %% Answer manipulation questions after each phase
 if phase~=0
-    % [Ans1, Ans2, Ans3, Ans4, Ans5, Ans6]=postPhase();
+    sca
+    [session.Phase(phase).postPhaseAns]=postPhase(session);
+    w = initScreen();
 end
 
 end
