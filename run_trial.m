@@ -49,6 +49,9 @@ Screen('FrameRect', w, [0 0 0 255*session.params.stimuli.stimContrast], [session
 
 Datapixx('EnablePixelMode');
 Datapixx('RegWr');
+Datapixx('DisableDoutDinLoopback');
+Datapixx('RegWr');
+
 
 pixelTrigger = double([session.stimuli.triggers.image(:,:,1);session.stimuli.triggers.image(:,:,2);session.stimuli.triggers.image(:,:,3)]);
 Datapixx('SetMarker');
