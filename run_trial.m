@@ -52,6 +52,8 @@ Datapixx('RegWr');
 Datapixx('DisableDoutDinLoopback');
 Datapixx('RegWr');
 
+% doutValue = bin2dec('0101 0101 0101 0101 0101 0101'); % fix according to pixel values     https://vpixx.com/vocal/pixelmode/     and:    https://vpixx.com/vocal/introduction-to-registers-and-schedules/
+% Datapixx('SetDoutValues', doutValue);
 
 pixelTrigger = double([session.stimuli.triggers.image(:,:,1);session.stimuli.triggers.image(:,:,2);session.stimuli.triggers.image(:,:,3)]);
 Datapixx('SetMarker');
