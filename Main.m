@@ -26,6 +26,7 @@ if ~isOpen
     error('VIEWPixx not connected! Please check connection and try again');
 end
 PsychDataPixx('Open');
+PsychDataPixx('EnableVideoScanningBacklight');
 ResponsePixx('Close');
 ResponsePixx('Open');
 
