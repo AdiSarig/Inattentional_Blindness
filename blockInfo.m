@@ -17,7 +17,7 @@ Datapixx('SetDoutValues', doutValue);
 
 % Register write exactly when the pixels appear on screen
 pixelTrigger = double([vpix_trig(:,:,1);vpix_trig(:,:,2);vpix_trig(:,:,3)]);
-Datapixx('RegWrPixelSync',pixelTrigger,3000);
+Datapixx('RegWrPixelSync',pixelTrigger,5);
 
 instructions=session.params.procedure.instructions;
 if phase~=3

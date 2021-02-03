@@ -22,7 +22,7 @@ timing.minFix          =  1.3;                          % minimal time for fixat
 timing.addFix          =  0.2;                          % maximal time to add to fixation (total: 1.3-1.5 sec)
 timing.ImDur           =  0.1;                          % stimuli duration
 timing.ifi = Screen('GetFlipInterval',w);
-if timing.ifi< 115 || timing.ifi> 125                   % abort if refresh rate isn't 120 hz
+if 1/timing.ifi< 115 || 1/timing.ifi> 125                   % abort if refresh rate isn't 120 hz
     error('Screen refresh rate should be set to 120 hz')
 end
 timing.ImFrames = round(timing.ImDur/timing.ifi);
