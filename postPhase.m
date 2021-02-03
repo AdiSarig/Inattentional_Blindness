@@ -4,12 +4,16 @@ global debug
 debug = 1;
 
 %% First question
-Q1 = 'some participants were randomly assigned to a condition in which items other than the circles and random symbols appeared on the screen. Did you notice anything other than the circles and random symbols while you were completing the task? If so, please describe below. Be as detailed as possible. If not, please indicate that.';
+if session.subject.gender=='f'
+    Q1 = 'חלק מהמשתתפים הוקצו באופן רנדומלי לתנאי בו הופיעו גירויים נוספים מלבד העיגולים והרעש. האם הבחנת במשהו נוסף במהלך ביצוע המשימה? אם כן, פרטי מה ראית. היי מדויקת עד כמה שניתן. אם לא, כתבי זאת.';
+else
+    Q1 = 'חלק מהמשתתפים הוקצו באופן רנדומלי לתנאי בו הופיעו גירויים נוספים מלבד העיגולים והרעש. האם הבחנת במשהו נוסף במהלך ביצוע המשימה? אם כן, פרט מה ראית. היה מדויק עד כמה שניתן. אם לא, כתוב זאת.';
+end
 tmp = inputdlg(Q1,'Notes',10);
 Ans.n1 = tmp{1};
 
 %% Second question
-Q2 = 'If you did notice items other than the circles and symbols, at what point in the phase did you notice them?';
+Q2 = 'אילו אכן הבחנתם בגירויים נוספים מלבד העיגולים והרעש, באיזה שלב בניסוי הבחנתם בהם?';
 tmp = inputdlg(Q2,'Notes',10);
 Ans.n2 = tmp{1};
 
@@ -23,14 +27,13 @@ Three = KbName('3#');
 Four = KbName('4$');
 Five = KbName('5%');
 
-conf = 1; freq = 2;
 w = initScreen();
-for im = 1:3 % images to be asked about with the question already displayed on top
+for im = 1:2 % images to be asked about with the question already displayed on top
     % display image with confidance question
-    imName = sprintf('%s%c%s%c%d_%d.pcx',session.params.defaultpath,filesep, session.params.stimuli.stimFolder, filesep, im,conf);
+    imName = sprintf('%s%c%s%c%s_%d_conf.tif',session.params.defaultpath,filesep, session.params.stimuli.stimFolder, filesep,session.subject.gender, im);
     image = imread(imName);
     imageTex = Screen('MakeTexture',w,image);
-    Screen('DrawTexture',w, imageTex,[],[],[],[], session.params.stimuli.stimContrast);
+    Screen('DrawTexture',w, imageTex);
     Screen('Flip',w);
     
     % wait for response
@@ -58,10 +61,10 @@ for im = 1:3 % images to be asked about with the question already displayed on t
     end
     
     % display the same image with frequency question
-    imName = sprintf('%s%c%s%c%d_%d.pcx',session.params.defaultpath,filesep, session.params.stimuli.stimFolder, filesep, im,freq);
+    imName = sprintf('%s%c%s%c%s_%d_freq.tif',session.params.defaultpath,filesep, session.params.stimuli.stimFolder, filesep,session.subject.gender, im);
     image = imread(imName);
     imageTex = Screen('MakeTexture',w,image);
-    Screen('DrawTexture',w, imageTex,[],[],[],[], session.params.stimuli.stimContrast);
+    Screen('DrawTexture',w, imageTex);
     Screen('Flip',w);
     
     % wait for response
@@ -91,17 +94,25 @@ end
 sca
 
 %% Fourth question
-Q4 = 'If you saw words, did you notice anything special about them?';
+Q4 = 'אם ראיתם תמונות, האם הבחנתם במשהו מיוחד לגביהן?';
 tmp = inputdlg(Q4,'Notes',10);
 Ans.n4 = tmp{1};
 
 %% Fifth question
-Q5 = 'If you saw words, please jot down as many as you can remember.';
+if session.subject.gender=='f'
+    Q5 = 'אם ראית תמונות, פרטי מה היה נושא התמונה. כתבי כמה שיותר.';
+else
+    Q5 = 'אם ראית תמונות, פרט מה היה נושא התמונה. כתוב כמה שיותר.';
+end
 tmp = inputdlg(Q5,'Notes',10);
 Ans.n5 = tmp{1};
 
 %% Sixth question
-Q6 = 'If you have any other comments about the phase or experiment, feel free to write them below.';
+if session.subject.gender=='f'
+    Q6 = 'אם יש לך הערות נוספות לגבי הניסוי, הרגישי חופשי לפרט אותן כאן:';
+else
+    Q6 = 'אם יש לך הערות נוספות לגבי הניסוי, הרגש חופשי לפרט אותן כאן:';
+end
 tmp = inputdlg(Q6,'Notes',10);
 Ans.n6 = tmp{1};
 
