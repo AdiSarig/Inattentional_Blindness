@@ -50,8 +50,9 @@ Trial.ImTime = Datapixx('GetMarker'); % retrieve the saved timing
 
 % Calculate the exact timing according to the refresh rate
 delta = Trial.ImTime-prevTrial.FixTime;
-numberOfFrames = ceil(delta*session.params.timing.refreshRate);
-Trial.FixDur = numberOfFrames/session.params.timing.refreshRate;
+% numberOfFrames = ceil(delta*session.params.timing.refreshRate);
+% Trial.FixDur = numberOfFrames/session.params.timing.refreshRate;
+Trial.FixDur = delta;
 
 %% Draw fixation
 
@@ -76,8 +77,9 @@ Trial.FixTime=Datapixx('GetMarker'); % retrieve the saved timing
 
 % Calculate the exact timing according to the refresh rate
 delta=Trial.FixTime-Trial.ImTime;
-numberOfFrames = ceil(delta*session.params.timing.refreshRate);
-Trial.ImDur = numberOfFrames/session.params.timing.refreshRate;
+% numberOfFrames = ceil(delta*session.params.timing.refreshRate);
+% Trial.ImDur = numberOfFrames/session.params.timing.refreshRate;
+Trial.ImDur = delta;
 
 %% Collect Response
 
