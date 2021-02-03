@@ -5,11 +5,11 @@ global w
 session.stimuli = initStimuli(session.params);
 
 if phase==0
-    PsychDataPixx('GetPreciseTime');
+    PsychDataPixx('GetPreciseTime');        % sync system and Vpixx clocks
     [session] = runBlock(session,phase,1);
 else
     %% PREPARE THE TRIAL MATRIX
-    % This section creates the trial matrix for each phase, using initTrialList function
+    % Create the trial matrix for each phase
     % Trial Types: Image Type: 1=face 2=house 3=noise; Disc orientation: 1=same 2=diff
     session.Phase(phase).phaseTrialList = initTrialList(session.params.procedure);
     [session.Phase(phase).startExpPtb,session.Phase(phase).startExpVpixx] = PsychDataPixx('GetPreciseTime'); % synchronize system and vpixx clocks and get their values

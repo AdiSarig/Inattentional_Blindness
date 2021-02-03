@@ -1,4 +1,6 @@
 function [Trial] = saveResponse(session,Trial,phase)
+% decode the logged responses based on the response box mapping done at
+% parameters initiation
 
 if Trial.Response == -1 %no response
     Trial.Accuracy = -1;
@@ -21,7 +23,7 @@ else
             Trial.Response = 99;
             Trial.Accuracy = 0;
         end
-    else
+    else        % disc orientation responses (same/different)
         if Response == session.params.response.discSame % same orientation
             Trial.Response=1;
             Trial.Accuracy = +(Trial.CorrAns==Trial.Response);

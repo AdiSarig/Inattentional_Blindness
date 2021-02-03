@@ -1,4 +1,6 @@
 function [session] = saveCodes(session)
+% save all codes used for running the experiment in a unique folder for
+% each subject
 
 cl = clock;
 prf = sprintf('sub-%d-%s-%d-%d-%d',session.subjnum, date,cl(4),cl(5),round(cl(6)));

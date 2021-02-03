@@ -9,7 +9,7 @@ function  [trialList] = initTrialList(procedure)
 % L.M., August 2017
 % ------------------------------------------------------------------
 procedure.numStim=12; % number of different stimuli for each type (face/house/noise); must be multiplication of 4
-numCol=5; % columns: image_levels (face/house/noise), image_num (1:numStim), discOrientation (horizontal/vertical), changeDisc (whether one of the discs changes),locations (which of the 4 changes)
+numCol=5;             % columns: image_levels (face/house/noise), image_num (1:numStim), discOrientation (horizontal/vertical), changeDisc (whether one of the discs changes),locations (which of the 4 changes)
 trialList=zeros(procedure.numTrials,numCol,procedure.numBlocks);
 
 %% Prepare the trial matrix

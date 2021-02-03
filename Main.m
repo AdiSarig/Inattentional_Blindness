@@ -7,13 +7,6 @@ function Main()
 
 % -----------------------------------------------------
 
-%% TO DO
-% Fix timing issues
-% Add post phase questions - find out how to create a text box
-% Add TTL by initBIO: http://psychtoolbox.org/docs/PsychImaging
-%                     http://psychtoolbox.org/docs/PsychDataPixx
-% Adjust response box: http://psychtoolbox.org/docs/ResponsePixx
-
 %%
 global phase debug w
 
@@ -26,8 +19,8 @@ if ~isOpen
     error('VIEWPixx not connected! Please check connection and try again');
 end
 PsychDataPixx('Open');
-PsychDataPixx('EnableVideoScanningBacklight');
-ResponsePixx('Close');
+PsychDataPixx('EnableVideoScanningBacklight'); % switch to ScanningBacklight mode for full illumination only after pixels stabilize 
+ResponsePixx('Close'); % to make sure open doesn't fail
 ResponsePixx('Open');
 
 %% Initialize session
@@ -39,7 +32,7 @@ session = initSession('Inattentional_Blindness');
 
 %% PRELIMINTY PREPATATION
 
-% clc;                        % Clear Matlab/Octave window:
+clc;                          % Clear Matlab/Octave window:
 AssertOpenGL;                 % check for Opengl compatibility, abort otherwise
 rand('state',sum(100*clock)); % Reseed the random-number generator for each expt.
 
@@ -47,7 +40,7 @@ KbCheck;                      % Do dummy calls to GetSecs, WaitSecs, KbCheck
 WaitSecs(0.1);
 GetSecs;
 ListenChar(2);
-priorityLevel=MaxPriority(w);                                               % Set priority for script execution to realtime priority:
+priorityLevel=MaxPriority(w); % Set priority for script execution to realtime priority:
 Priority(priorityLevel);
 
 %% RUN EXPERIMENT
@@ -63,7 +56,7 @@ save(fileName,'session');
 %% Thank you screen
 DrawFormattedText(w, session.params.procedure.instructions.End, 'center', 'center', session.params.screen.text.colour);
 Screen('Flip',w);
-WaitSecs(MessDur);
+WaitSecs(3);
 KbWait;
 ResponsePixx('Close');
 Screen('CloseAll');

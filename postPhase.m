@@ -14,6 +14,8 @@ tmp = inputdlg(Q2,'Notes',10);
 Ans.n2 = tmp{1};
 
 %% Third question
+
+% initiate keys
 KbName('UnifyKeyNames');
 One = KbName('1!');
 Two = KbName('2@');
@@ -23,13 +25,15 @@ Five = KbName('5%');
 
 conf = 1; freq = 2;
 w = initScreen();
-for im = 1:3
+for im = 1:3 % images to be asked about with the question already displayed on top
+    % display image with confidance question
     imName = sprintf('%s%c%s%c%d_%d.pcx',session.params.defaultpath,filesep, session.params.stimuli.stimFolder, filesep, im,conf);
     image = imread(imName);
     imageTex = Screen('MakeTexture',w,image);
     Screen('DrawTexture',w, imageTex,[],[],[],[], session.params.stimuli.stimContrast);
     Screen('Flip',w);
     
+    % wait for response
     KbWait([],2);
     [keyIsDown, ~, Resp]=KbCheck;
     while keyIsDown
@@ -53,12 +57,14 @@ for im = 1:3
         [keyIsDown, ~, Resp]=KbCheck;
     end
     
+    % display the same image with frequency question
     imName = sprintf('%s%c%s%c%d_%d.pcx',session.params.defaultpath,filesep, session.params.stimuli.stimFolder, filesep, im,freq);
     image = imread(imName);
     imageTex = Screen('MakeTexture',w,image);
     Screen('DrawTexture',w, imageTex,[],[],[],[], session.params.stimuli.stimContrast);
     Screen('Flip',w);
     
+    % wait for response
     KbWait([],2);
     [~, ~, Resp]=KbCheck;
     while keyIsDown
