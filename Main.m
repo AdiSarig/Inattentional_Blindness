@@ -22,6 +22,9 @@ PsychDataPixx('Open');
 PsychDataPixx('EnableVideoScanningBacklight'); % switch to ScanningBacklight mode for full illumination only after pixels stabilize 
 ResponsePixx('Close'); % to make sure open doesn't fail
 ResponsePixx('Open');
+doutValue = bin2dec('0000 0000 0000 0000 0000 0000');
+Datapixx('SetDoutValues', doutValue);
+Datapixx('RegWr');
 
 %% Initialize session
 session = initSession('Inattentional_Blindness');
@@ -58,6 +61,9 @@ DrawFormattedText(w, session.params.procedure.instructions.End, 'center', 'cente
 Screen('Flip',w);
 WaitSecs(3);
 KbWait;
+doutValue = bin2dec('0000 0000 0000 0000 0000 0000');
+Datapixx('SetDoutValues', doutValue);
+Datapixx('RegWr');
 ResponsePixx('Close');
 Screen('CloseAll');
 ListenChar(0);
