@@ -44,7 +44,7 @@ pixelTrigger = double([session.stimuli.triggers.image(:,:,1);session.stimuli.tri
 Datapixx('RegWrPixelSync',pixelTrigger,3);
 
 Datapixx('SetMarker');                % save the onset of the next register write
-Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',prevTrial.ExpImTime));% present the stimulus
+Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',prevTrial.ExpImTime+0.005));% present the stimulus
 Datapixx('RegWrRd');                  % must read the register before getting the marker
 Trial.ImTime = Datapixx('GetMarker'); % retrieve the saved timing
 
@@ -71,7 +71,7 @@ pixelTrigger = double([session.stimuli.triggers.fixation(:,:,1);session.stimuli.
 Datapixx('RegWrPixelSync',pixelTrigger,3);
 
 Datapixx('SetMarker');               % save the onset of the next register write
-Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',Trial.ImTime+session.params.timing.ImDurForFlip));
+Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',Trial.ImTime+session.params.timing.ImDur+0.005));
 Datapixx('RegWrRd');                 % must read the register before getting the marker
 Trial.FixTime=Datapixx('GetMarker'); % retrieve the saved timing
 
