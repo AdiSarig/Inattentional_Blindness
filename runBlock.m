@@ -41,6 +41,8 @@ prevTrial.FixTime=Datapixx('GetMarker'); % retrieve the saved timing - start of 
 prevTrial.ExpImTime=prevTrial.FixTime + rand(1)*session.params.timing.addFix + session.params.timing.minFix; % generate the timing of the first stimulus
 
 %% Run block
+Datapixx('EnableDinDebounce');
+Datapixx('RegWr');
 for trialnum=1:ntrials  
     % Present stimuli
     Trials(trialnum)=run_trial(session,Trials(trialnum),prevTrial);
