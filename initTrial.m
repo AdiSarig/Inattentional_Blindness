@@ -1,5 +1,6 @@
 function [Trial] = initTrial(session,trialParam,phase)
 % Initiate one trial based on trial parameters and current phase
+Trial.TrialNum = [];
 
 Trial.ImageType       = trialParam(1); % 1=face, 2=house, 3=noise
 Trial.ImageNum        = trialParam(2); % 1-12

@@ -12,8 +12,7 @@ vpix_trig_info_tex=Screen('MakeTexture',w,vpix_trig);
 Screen('DrawTexture',w,vpix_trig_info_tex,[],[0 0 8 1]);
 
 % Send TTL at the next register write
-doutValue = bin2dec('0000 0000 0000 1111 1111 1111');
-Datapixx('SetDoutValues', doutValue);
+Datapixx('SetDoutValues', session.triggers(1).BLOCK_INFO);
 
 % Register write exactly when the pixels appear on screen
 pixelTrigger = double([vpix_trig(:,:,1);vpix_trig(:,:,2);vpix_trig(:,:,3)]);
