@@ -23,6 +23,7 @@ timing.addFix          =  0.2;                          % maximal time to add to
 timing.ImDur           =  0.1;                          % stimuli duration
 timing.ifi = Screen('GetFlipInterval',w);
 if 1/timing.ifi< 115 || 1/timing.ifi> 125                   % abort if refresh rate isn't 120 hz
+    ResponsePixx('Close');Datapixx('Close');sca
     error('Screen refresh rate should be set to 120 hz')
 end
 timing.ImFrames = round(timing.ImDur/timing.ifi);
