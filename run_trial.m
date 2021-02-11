@@ -10,7 +10,7 @@ function [Trial]=run_trial(session,Trial, prevTrial)
 
 % L.M., August 2017
 
-global w
+global w phase
 
 %% definitions
 Screen(w,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); % this enables us to use the alpha transparency
@@ -36,8 +36,7 @@ Screen('FrameRect', w, [0 0 0 255*session.params.stimuli.stimContrast], [session
 %% Display stimuli
 
 % Send TTL at the next register write
-doutValue = bin2dec('0000 0000 0000 0000 1111 1111');
-Datapixx('SetDoutValues', doutValue);
+Datapixx('SetDoutValues', session.triggers(1).Trial_START);
 
 % Register write exactly when the pixels appear on screen
 pixelTrigger = double([session.stimuli.triggers.image(:,:,1);session.stimuli.triggers.image(:,:,2);session.stimuli.triggers.image(:,:,3)]);
@@ -48,6 +47,7 @@ Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',prevTrial.ExpImTime+0.005))
 Datapixx('RegWrRd');                  % must read the register before getting the marker
 Trial.ImTime = Datapixx('GetMarker'); % retrieve the saved timing
 
+sendTriggers(session.triggers,Trial,'image'); % trial info triggers - sent after the flip
 % Calculate the exact timing according to the refresh rate
 delta = Trial.ImTime-prevTrial.FixTime;
 % numberOfFrames = ceil(delta*session.params.timing.refreshRate);
@@ -63,8 +63,7 @@ Screen('FrameRect', w, [0 0 0 255*session.params.stimuli.stimContrast], [session
 %% Display fixation
 
 % Send TTL at the next register write
-doutValue = bin2dec('0000 1111 0000 1111 0000 1111'); % fix according to pixel values     https://vpixx.com/vocal/pixelmode/     and:    https://vpixx.com/vocal/introduction-to-registers-and-schedules/
-Datapixx('SetDoutValues', doutValue);
+sendTriggers(session.triggers,Trial,'fix');
 
 % Register write exactly when the pixels appear on screen
 pixelTrigger = double([session.stimuli.triggers.fixation(:,:,1);session.stimuli.triggers.fixation(:,:,2);session.stimuli.triggers.fixation(:,:,3)]);
@@ -97,6 +96,11 @@ else              % save only button press and not the release
     Trial.Response=Response(1,:);
     Trial.RTfromStart = RTfromStart(1);
 end
+
+% decode each trial's logged response based on the response box mapping done at parameters initiation
+[Trial] = saveResponse(session,Trial,phase);
+% send response triggers
+sendTriggers(session.triggers,Trial,'resp');
 
 ResponsePixx('StopNow',1);
 

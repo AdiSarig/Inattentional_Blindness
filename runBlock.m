@@ -16,6 +16,9 @@ for trialnum=1:ntrials
     % Initialize all trials within a block
     Trials(trialnum) = initTrial(session,trialList(trialnum,:),phase);
 end
+% add trial numbers
+counttrials = num2cell(1:ntrials);
+[Trials(1:ntrials).TrialNum] = counttrials{:};
 
 %% Starting Message
 [~,Response] = blockInfo(session);
@@ -33,6 +36,8 @@ if phase~=0
 else
     PsychDataPixx('GetPreciseTime');
 end
+Datapixx('SetDoutValues', session.triggers(1).BLOCK_STARTED);
+Datapixx('RegWr');
 
 Datapixx('SetMarker');                   % save the onset of the next register write
 Screen('Flip',w);
@@ -51,10 +56,10 @@ end % of trial loop
 
 %% Save block
 if phase~=0 % don't save practice data
-    for trialnum=1:ntrials
-        % decode each trial's logged response based on the response box mapping done at parameters initiation
-        Trials(trialnum)=saveResponse(session,Trials(trialnum),phase);
-    end
+%     for trialnum=1:ntrials
+%         % decode each trial's logged response based on the response box mapping done at parameters initiation
+%         Trials(trialnum)=saveResponse(session,Trials(trialnum),phase);
+%     end
     
     % move all fixDur one trial up
     FixDurCell = {Trials(2:end).FixDur,0};
@@ -90,6 +95,9 @@ if phase~=0 % don't save practice data
         aveDev = mean(test);
     end
 end
+
+Datapixx('SetDoutValues', session.triggers(1).BLOCK_ENDED);
+Datapixx('RegWr');
 
 end
 

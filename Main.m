@@ -22,7 +22,7 @@ PsychDataPixx('Open');
 PsychDataPixx('EnableVideoScanningBacklight'); % switch to ScanningBacklight mode for full illumination only after pixels stabilize 
 ResponsePixx('Close'); % to make sure open doesn't fail
 ResponsePixx('Open');
-doutValue = bin2dec('0000 0000 0000 0000 0000 0000');
+doutValue = bin2dec('0000 0000 0000 0000 0000 0000'); % initialize digital output
 Datapixx('SetDoutValues', doutValue);
 Datapixx('RegWr');
 
@@ -46,6 +46,9 @@ ListenChar(2);
 priorityLevel=MaxPriority(w); % Set priority for script execution to realtime priority:
 Priority(priorityLevel);
 
+Datapixx('SetDoutValues', session.triggers(1).TRIGGERS_RECORDING_STARTED);
+Datapixx('RegWr');
+
 %% RUN EXPERIMENT
 
 for phase=0:3
@@ -61,8 +64,9 @@ DrawFormattedText(w, session.params.procedure.instructions.End, 'center', 'cente
 Screen('Flip',w);
 WaitSecs(3);
 KbWait;
-doutValue = bin2dec('0000 0000 0000 0000 0000 0000');
-Datapixx('SetDoutValues', doutValue);
+Datapixx('SetDoutValues', session.triggers(1).TRIGGERS_RECORDING_ENDED);
+Datapixx('RegWr');
+Datapixx('SetDoutValues', session.triggers(1).BIOSEMI_CODE_SLEEP);
 Datapixx('RegWr');
 ResponsePixx('Close');
 Screen('CloseAll');
