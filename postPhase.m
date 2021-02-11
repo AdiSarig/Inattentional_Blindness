@@ -1,22 +1,25 @@
 function [Ans] = postPhase(session)
 
 global debug
-debug = 1;
+debug = 0;
+
+figure('Position',[0 0 session.params.screen.dim.pix]); % open empty bg figure
 
 %% First question
-if session.subject.gender=='f'
-    Q1 = 'חלק מהמשתתפים הוקצו באופן רנדומלי לתנאי בו הופיעו גירויים נוספים מלבד העיגולים והרעש. האם הבחנת במשהו נוסף במהלך ביצוע המשימה? אם כן, פרטי מה ראית. היי מדויקת עד כמה שניתן. אם לא, כתבי זאת.';
-else
-    Q1 = 'חלק מהמשתתפים הוקצו באופן רנדומלי לתנאי בו הופיעו גירויים נוספים מלבד העיגולים והרעש. האם הבחנת במשהו נוסף במהלך ביצוע המשימה? אם כן, פרט מה ראית. היה מדויק עד כמה שניתן. אם לא, כתוב זאת.';
-end
-tmp = inputdlg(Q1,'Notes',10);
+Q1 = {'\fontsize{12} עבור חלק מהמשתתפים (לא כולם!), הצגנו גירויים נוספים מלבד העיגולים והדפוס הרועש ברקע. האם הבחנתם בגירוי נוסף במהלך ביצוע המשימה? אם לא, כתבו זאת. אם כן, פרטו מה ראיתם. אנא היו מדויקים עד כמה שניתן.'};
+defaultans = {''}; 
+opts.Interpreter = 'tex';
+tmp = inputdlg(Q1,'Notes',[10 120],defaultans, opts);
 Ans.n1 = tmp{1};
 
 %% Second question
-Q2 = 'אילו אכן הבחנתם בגירויים נוספים מלבד העיגולים והרעש, באיזה שלב בניסוי הבחנתם בהם?';
-tmp = inputdlg(Q2,'Notes',10);
+Q2 = {'\fontsize{12} אם אכן הבחנתם בגירויים נוספים מלבד העיגולים והרעש, באיזה שלב בניסוי הבחנתם בהם?'};
+defaultans = {''}; 
+opts.Interpreter = 'tex'; 
+tmp = inputdlg(Q2,'Notes',10,defaultans, opts);
 Ans.n2 = tmp{1};
 
+close('all')
 %% Third question
 
 % initiate keys
@@ -27,13 +30,23 @@ Three = KbName('3#');
 Four = KbName('4$');
 Five = KbName('5%');
 
+imNum = [randi(session.params.procedure.numStim,[1 2]) 1 1 1];
 w = initScreen();
-for im = 1:2 % images to be asked about with the question already displayed on top
-    % display image with confidance question
-    imName = sprintf('%s%c%s%c%s_%d_conf.tif',session.params.defaultpath,filesep, session.params.stimuli.stimFolder, filesep,session.subject.gender, im);
+for ind = 1:length(imNum) % images to be asked about with the question already displayed on top
+    if ind == 3, continue, end % don't display noise
+    
+    % display confidance question
+    confPath = sprintf('%s%c%s%cconf.tif',session.params.defaultpath,filesep, session.params.stimuli.stimFolder, filesep);
+    conf = imread(confPath);
+    confTex = Screen('MakeTexture',w,conf);
+    Screen('DrawTexture',w, confTex);
+    
+    % display image
+    imName = sprintf('%s%c%s%c%d_%d.pcx',session.params.defaultpath,filesep, session.params.stimuli.stimFolder, filesep,ind,imNum(ind));
     image = imread(imName);
     imageTex = Screen('MakeTexture',w,image);
     Screen('DrawTexture',w, imageTex);
+    
     Screen('Flip',w);
     
     % wait for response
@@ -41,19 +54,19 @@ for im = 1:2 % images to be asked about with the question already displayed on t
     [keyIsDown, ~, Resp]=KbCheck;
     while keyIsDown
         if Resp(One)
-            Ans.n3(im).confidance = 1;
+            Ans.n3(ind).confidance = 1;
             break
         elseif Resp(Two)
-            Ans.n3(im).confidance = 2;
+            Ans.n3(ind).confidance = 2;
             break
         elseif Resp(Three)
-            Ans.n3(im).confidance = 3;
+            Ans.n3(ind).confidance = 3;
             break
         elseif Resp(Four)
-            Ans.n3(im).confidance = 4;
+            Ans.n3(ind).confidance = 4;
             break
         elseif Resp(Five)
-            Ans.n3(im).confidance = 5;
+            Ans.n3(ind).confidance = 5;
             break
         end
         KbWait([],2);
@@ -61,10 +74,17 @@ for im = 1:2 % images to be asked about with the question already displayed on t
     end
     
     % display the same image with frequency question
-    imName = sprintf('%s%c%s%c%s_%d_freq.tif',session.params.defaultpath,filesep, session.params.stimuli.stimFolder, filesep,session.subject.gender, im);
+    freqPath = sprintf('%s%c%s%cfreq.tif',session.params.defaultpath,filesep, session.params.stimuli.stimFolder,filesep);
+    freq = imread(freqPath);
+    freqTex = Screen('MakeTexture',w,freq);
+    Screen('DrawTexture',w, freqTex);
+    
+    % display image
+    imName = sprintf('%s%c%s%c%d_%d.pcx',session.params.defaultpath,filesep, session.params.stimuli.stimFolder, filesep,ind,imNum(ind));
     image = imread(imName);
     imageTex = Screen('MakeTexture',w,image);
     Screen('DrawTexture',w, imageTex);
+    
     Screen('Flip',w);
     
     % wait for response
@@ -72,49 +92,54 @@ for im = 1:2 % images to be asked about with the question already displayed on t
     [~, ~, Resp]=KbCheck;
     while keyIsDown
         if Resp(One)
-            Ans.n3(im).frequency = 1;
+            Ans.n3(ind).frequency = 1;
             break
         elseif Resp(Two)
-            Ans.n3(im).frequency = 2;
+            Ans.n3(ind).frequency = 2;
             break
         elseif Resp(Three)
-            Ans.n3(im).frequency = 3;
+            Ans.n3(ind).frequency = 3;
             break
         elseif Resp(Four)
-            Ans.n3(im).frequency = 4;
+            Ans.n3(ind).frequency = 4;
             break
         elseif Resp(Five)
-            Ans.n3(im).frequency = 5;
+            Ans.n3(ind).frequency = 5;
             break
         end
         KbWait([],2);
         [keyIsDown, ~, Resp]=KbCheck;
     end
 end
+Ans.n3(3) = []; % remove empty row
+Ans.selectedImages.face = imNum(1);
+Ans.selectedImages.house = imNum(2);
 sca
 
+figure('Position',[0 0 session.params.screen.dim.pix]); % open empty bg figure
+
 %% Fourth question
-Q4 = 'אם ראיתם תמונות, האם הבחנתם במשהו מיוחד לגביהן?';
-tmp = inputdlg(Q4,'Notes',10);
+Q4 = {'\fontsize{12} אם ראיתם תמונות, האם הבחנתם במשהו מיוחד לגביהן?'};
+defaultans = {''}; 
+opts.Interpreter = 'tex'; 
+tmp = inputdlg(Q4,'Notes',10,defaultans, opts);
 Ans.n4 = tmp{1};
 
 %% Fifth question
-if session.subject.gender=='f'
-    Q5 = 'אם ראית תמונות, פרטי מה היה נושא התמונה. כתבי כמה שיותר.';
-else
-    Q5 = 'אם ראית תמונות, פרט מה היה נושא התמונה. כתוב כמה שיותר.';
-end
-tmp = inputdlg(Q5,'Notes',10);
+Q5 = {'\fontsize{12} אם ראיתם תמונות, אנא פרטו מה היה נושא התמונה. כתבו כמה שיותר.'};
+defaultans = {''}; 
+opts.Interpreter = 'tex'; 
+tmp = inputdlg(Q5,'Notes',10,defaultans, opts);
 Ans.n5 = tmp{1};
 
 %% Sixth question
-if session.subject.gender=='f'
-    Q6 = 'אם יש לך הערות נוספות לגבי הניסוי, הרגישי חופשי לפרט אותן כאן:';
-else
-    Q6 = 'אם יש לך הערות נוספות לגבי הניסוי, הרגש חופשי לפרט אותן כאן:';
-end
-tmp = inputdlg(Q6,'Notes',10);
+Q6 = {'\fontsize{12} אם יש לכם הערות נוספות לגבי הניסוי, הרגישו חופשי לפרט אותן כאן:'};
+defaultans = {''}; 
+opts.Interpreter = 'tex'; 
+tmp = inputdlg(Q6,'Notes',10,defaultans, opts);
 Ans.n6 = tmp{1};
+
+close('all') % close bg figure
 
  end
 
