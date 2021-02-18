@@ -36,7 +36,9 @@ if phase~=0
     Datapixx('SetDoutValues', session.triggers(1).BLOCK_STARTED); % send TTL of block start at the next register write
     Datapixx('RegWr');
     prevTrial.FixTime = session.Phase(phase).Blocks(block).startBlockVpixx; % starting time saved as previous trial for the first trial to run proparly
+    prevTrial.FixTime_ptb = session.Phase(phase).Blocks(block).startBlockPtb;
 else
+    [prevTrial.FixTime_ptb, prevTrial.FixTime] = PsychDataPixx('GetPreciseTime'); % starting time saved as previous trial for the first trial to run proparly
 end
 
 Screen('Flip',w); % remove block info
@@ -56,20 +58,27 @@ if phase~=0 % don't save practice data
     % move all fixDur one trial up
     FixDurCell = {Trials(2:end).FixDur,0};
     [Trials.FixDur] = FixDurCell{:}; 
+    FixDur_ptbCell = {Trials(2:end).FixDur_ptb,0};
+    [Trials.FixDur_ptb] = FixDur_ptbCell{:}; 
     
     % calc the last fixation duration
     Datapixx('SetMarker');
-    Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',Trials(trialnum).ExpImTime));
+    lastFixOffset_ptb = Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',Trials(end).ExpImTime));
     Datapixx('RegWrRd');
     lastFixOffset=Datapixx('GetMarker');
 
     Trials(end).FixDur = lastFixOffset - Trials(end).ImTime;
+    Trials(end).FixDur_ptb = lastFixOffset_ptb - Trials(end).ImTime_ptb;
     
     % remove experiment starting time from timings
     ImTimeCell             = num2cell([Trials.ImTime] - session.Phase(phase).startExpVpixx);
     [Trials.ImTime]        = ImTimeCell{:};
     FixTimeCell            = num2cell([Trials.FixTime] - session.Phase(phase).startExpVpixx);
     [Trials.FixTime]       = FixTimeCell{:};
+    ImTime_ptbCell         = num2cell([Trials.ImTime_ptb] - session.Phase(phase).startExpPtb);
+    [Trials.ImTime_ptb]    = ImTime_ptbCell{:};
+    FixTime_ptbCell        = num2cell([Trials.FixTime_ptb] - session.Phase(phase).startExpPtb);
+    [Trials.FixTime_ptb]   = FixTime_ptbCell{:};
     ExpImTimeCell          = num2cell([Trials.ExpImTime] - session.Phase(phase).startExpVpixx);
     [Trials.ExpImTime]     = ExpImTimeCell{:};
     RTfromStartCell        = num2cell([Trials.RTfromStart] - session.Phase(phase).startExpVpixx);

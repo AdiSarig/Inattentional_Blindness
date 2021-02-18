@@ -26,10 +26,15 @@ end
     (trialParam(3),trialParam(4),trialParam(5),session.stimuli.Disc);
 
 Trial.ExpImTime  = [];
-Trial.ImTime  = [];
-Trial.ImDur   = [];
-Trial.FixTime = [];
-Trial.FixDur  = [];
+Trial.ImTime     = [];
+Trial.ImDur      = [];
+Trial.FixTime    = [];
+Trial.FixDur     = [];
+
+Trial.ImTime_ptb     = [];
+Trial.ImDur_ptb      = [];
+Trial.FixTime_ptb    = [];
+Trial.FixDur_ptb     = [];
 
 % determine accuracy based on phase number - phase 3 the task is to identify the image type,
 % in all other phases the task is to identify whether the discs changed orientation

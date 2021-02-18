@@ -59,6 +59,7 @@ Trial.ImTime = Datapixx('GetMarker');                       % retrieve the saved
 sendTriggers(session.triggers,Trial,'image');               % trial info triggers - sent after the flip
 
 Trial.FixDur = Trial.ImTime - prevTrial.FixTime;            % calculate the exact fixation duration
+Trial.FixDur_ptb = Trial.ImTime_ptb - prevTrial.FixTime_ptb;% also for ptb timing
 
 %% Draw fixation
 
@@ -95,6 +96,7 @@ Datapixx('RegWrRd');                         % must read the register before get
 Trial.FixTime = Datapixx('GetMarker');       % retrieve the saved timing from the register
 
 Trial.ImDur = Trial.FixTime - Trial.ImTime;  % calculate the exact stimuli duration
+Trial.ImDur_ptb = Trial.FixTime_ptb - Trial.ImTime_ptb; % also for ptb timing
 
 %% Collect Response
 
