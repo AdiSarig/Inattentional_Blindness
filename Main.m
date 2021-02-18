@@ -10,7 +10,7 @@ function Main()
 %%
 global phase debug w
 
-debug = 1;
+debug = 0;
 
 %% INITIALIZE EXPERIMENT
 % Initialize Vpixx
@@ -18,13 +18,19 @@ isOpen = Datapixx('Open'); % check if Vpixx screen is connected
 if ~isOpen
     error('VIEWPixx not connected! Please check connection and try again');
 end
+
 PsychDataPixx('Open');
 PsychDataPixx('EnableVideoScanningBacklight'); % switch to ScanningBacklight mode for full illumination only after pixels stabilize 
+
 ResponsePixx('Close'); % to make sure open doesn't fail
 ResponsePixx('Open');
+Datapixx('EnableDinDebounce');
+Datapixx('RegWr');
+
 doutValue = bin2dec('0000 0000 0000 0000 0000 0000'); % initialize digital output
 Datapixx('SetDoutValues', doutValue);
 Datapixx('RegWr');
+
 
 %% Initialize session
 session = initSession('Inattentional_Blindness');

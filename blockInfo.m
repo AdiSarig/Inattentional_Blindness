@@ -4,7 +4,7 @@ function [InfoTiming,Response] = blockInfo(session)
 
 global phase w GL
 
-ResponsePixx('StartNow',1);
+ResponsePixx('StartNow',1); % start response collection
 
 % Draw info pixel trigger
 pixelTrigger = double(session.stimuli.triggers.info);
@@ -15,7 +15,7 @@ glDrawPixels(size(pixelTrigger, 2), 1, GL.RGB, GL.UNSIGNED_BYTE, uint8(pixelTrig
 Datapixx('SetDoutValues', session.triggers(1).BLOCK_INFO);
 
 instructions=session.params.procedure.instructions;
-if phase~=3
+if phase~=3 % instructions for phase 1/2: answer regarding the discs
     DrawFormattedText(w,instructions.disc , 'center', 'center', session.params.stimuli.text.colour);
     Datapixx('SetMarker');                   % save the onset of the next register write
     Datapixx('RegWrPixelSync',pixelTrigger); % register write exactly when the pixels appear on screen
@@ -25,7 +25,7 @@ if phase~=3
     
     [Response] = ResponsePixx('GetLoggedResponses',2); % unlimited wait for any response
     Response=Response(1,:);
-else
+else % instructions for phase 3: answer regarding the images
     DrawFormattedText(w,instructions.image , 'center', 'center', session.params.stimuli.text.colour);
     Datapixx('SetMarker');                   % save the onset of the next register write
     Datapixx('RegWrPixelSync',pixelTrigger); % register write exactly when the pixels appear on screen
@@ -37,7 +37,7 @@ else
     Response=Response(1,:);
 end
 
-ResponsePixx('StopNow',1);
+ResponsePixx('StopNow',1); % stop response collection
 
 end
 

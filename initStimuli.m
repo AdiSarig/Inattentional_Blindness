@@ -1,5 +1,5 @@
 function stimuli = initStimuli(params)
-% Initiate all experimental stimuli and create their texture
+% Initialize all experimental stimuli and create their textures
 
 global w
 

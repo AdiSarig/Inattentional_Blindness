@@ -1,6 +1,6 @@
 function [session] = runBlock(session,phase,block)
 
-global w debug
+global w
 
 %% Assign trial list
 if phase==0
@@ -33,21 +33,17 @@ end
 % synchronize system and vpixx clocks
 if phase~=0
     [session.Phase(phase).Blocks(block).startBlockPtb,session.Phase(phase).Blocks(block).startBlockVpixx] = PsychDataPixx('GetPreciseTime');
+    Datapixx('SetDoutValues', session.triggers(1).BLOCK_STARTED); % send TTL of block start at the next register write
+    Datapixx('RegWr');
+    prevTrial.FixTime = session.Phase(phase).Blocks(block).startBlockVpixx; % starting time saved as previous trial for the first trial to run proparly
 else
-    PsychDataPixx('GetPreciseTime');
 end
-Datapixx('SetDoutValues', session.triggers(1).BLOCK_STARTED);
-Datapixx('RegWr');
 
-Datapixx('SetMarker');                   % save the onset of the next register write
-Screen('Flip',w);
-Datapixx('RegWrRd');                     % must read the register before getting the marker
-prevTrial.FixTime=Datapixx('GetMarker'); % retrieve the saved timing - start of block
-prevTrial.ExpImTime=prevTrial.FixTime + rand(1)*session.params.timing.addFix + session.params.timing.minFix; % generate the timing of the first stimulus
+Screen('Flip',w); % remove block info
+
+prevTrial.ExpImTime = prevTrial.FixTime + rand(1)*session.params.timing.addFix + session.params.timing.minFix; % generate the expected timing of the first stimulus
 
 %% Run block
-Datapixx('EnableDinDebounce');
-Datapixx('RegWr');
 for trialnum=1:ntrials  
     % Present stimuli
     Trials(trialnum)=run_trial(session,Trials(trialnum),prevTrial);
@@ -56,10 +52,6 @@ end % of trial loop
 
 %% Save block
 if phase~=0 % don't save practice data
-%     for trialnum=1:ntrials
-%         % decode each trial's logged response based on the response box mapping done at parameters initiation
-%         Trials(trialnum)=saveResponse(session,Trials(trialnum),phase);
-%     end
     
     % move all fixDur one trial up
     FixDurCell = {Trials(2:end).FixDur,0};
@@ -69,11 +61,9 @@ if phase~=0 % don't save practice data
     Datapixx('SetMarker');
     Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',Trials(trialnum).ExpImTime));
     Datapixx('RegWrRd');
-    lastFixTime=Datapixx('GetMarker');
-    
-    delta=lastFixTime-Trials(end).ImTime;
-    numberOfFrames = ceil(delta*session.params.timing.refreshRate);
-    Trials(end).FixDur = numberOfFrames/session.params.timing.refreshRate;
+    lastFixOffset=Datapixx('GetMarker');
+
+    Trials(end).FixDur = lastFixOffset - Trials(end).ImTime;
     
     % remove experiment starting time from timings
     ImTimeCell             = num2cell([Trials.ImTime] - session.Phase(phase).startExpVpixx);
@@ -85,15 +75,9 @@ if phase~=0 % don't save practice data
     RTfromStartCell        = num2cell([Trials.RTfromStart] - session.Phase(phase).startExpVpixx);
     RTfromStartCell([Trials.RTfromStart]<0)={-1};
     [Trials.RTfromStart]   = RTfromStartCell{:};
-    
+    sca
     % save trials into session struct
     session.Phase(phase).Blocks(block).trials   = Trials;
-    
-    % deviation test
-    if debug
-        test = [Trials(2:end).ImTime] - [Trials(1:end-1).ExpImTime];
-        aveDev = mean(test);
-    end
 end
 
 Datapixx('SetDoutValues', session.triggers(1).BLOCK_ENDED);

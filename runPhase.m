@@ -2,13 +2,13 @@ function [session] = runPhase(session,phase)
 
 global w
 
-session.stimuli = initStimuli(session.params);
+session.stimuli = initStimuli(session.params); % initialize all stimuli textures
 
 if phase==0
     PsychDataPixx('GetPreciseTime');        % sync system and Vpixx clocks
-    [session] = runBlock(session,phase,1);
     Datapixx('SetDoutValues', session.triggers(1).PHASE_STARTED);
     Datapixx('RegWr');
+    [session] = runBlock(session,phase,1);
 else
     %% PREPARE THE TRIAL MATRIX
     % Create the trial matrix for each phase
@@ -18,7 +18,7 @@ else
     Datapixx('SetDoutValues', session.triggers(1).PHASE_STARTED);
     Datapixx('RegWr');
     
-    %% Initialize block
+    %% Run blocks
     for block=1:size(session.Phase(phase).phaseTrialList,3)
         [session] = runBlock(session,phase,block);
     end
