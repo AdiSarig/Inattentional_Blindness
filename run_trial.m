@@ -10,7 +10,7 @@ function [Trial]=run_trial(session,Trial, prevTrial)
 
 % L.M., August 2017
 
-global w phase
+global w phase GL
 
 %% definitions
 Screen(w,'BlendFunction',GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); % this enables us to use the alpha transparency
@@ -29,23 +29,33 @@ disc3Loc=CenterRectOnPointd(session.stimuli.Disc.discSize,position.LLdisc(1),pos
 Screen('DrawTexture',w, Trial.discTex.n3,[],disc3Loc,[],[], session.params.stimuli.stimContrast);
 disc4Loc=CenterRectOnPointd(session.stimuli.Disc.discSize,position.LRdisc(1),position.LRdisc(2));
 Screen('DrawTexture',w, Trial.discTex.n4,[],disc4Loc,[],[], session.params.stimuli.stimContrast);
+% Draw pixel trigger
+pixelTrigger = double(session.stimuli.triggers.image);
+glRasterPos2d(10, 1);
+glDrawPixels(size(pixelTrigger, 2), 1, GL.RGB, GL.UNSIGNED_BYTE, uint8(pixelTrigger));
 
-Screen('DrawTexture',w,session.stimuli.triggers.imageTex,[],[0 0 8 1]);
 Screen('FrameRect', w, [0 0 0 255*session.params.stimuli.stimContrast], [session.params.stimuli.pos.CTR-400 session.params.stimuli.pos.CTR+400],2);
 
 %% Display stimuli
 
-% Send TTL at the next register write
-Datapixx('SetDoutValues', session.triggers(1).Trial_START);
+% wait until expected display time is reached
+while 1
+    Datapixx('RegWrRd');
+    t_now = Datapixx('GetTime');
+    if t_now > prevTrial.ExpImTime
+        break % break one frame before target frame
+    end
+end
 
-% Register write exactly when the pixels appear on screen
-pixelTrigger = double([session.stimuli.triggers.image(:,:,1);session.stimuli.triggers.image(:,:,2);session.stimuli.triggers.image(:,:,3)]);
-Datapixx('RegWrPixelSync',pixelTrigger,3);
+Datapixx('SetDoutValues', session.triggers(1).Trial_START); % send TTL at the next register write
 
-Datapixx('SetMarker');                % save the onset of the next register write
-Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',prevTrial.ExpImTime+0.005));% present the stimulus
-Datapixx('RegWrRd');                  % must read the register before getting the marker
-Trial.ImTime = Datapixx('GetMarker'); % retrieve the saved timing
+Datapixx('SetMarker');                                      % save the onset of the next register write
+Datapixx('RegWrPixelSync',pixelTrigger);                    % register write exactly when the pixels appear on screen
+
+Trial.ImTime_ptb = Screen('Flip',w);                        % present stimuli
+
+Datapixx('RegWrRd');                                        % must read the register before getting the marker
+Trial.ImTime = Datapixx('GetMarker');                       % retrieve the saved timing from the register
 
 sendTriggers(session.triggers,Trial,'image'); % trial info triggers - sent after the flip
 % Calculate the exact timing according to the refresh rate
@@ -56,23 +66,37 @@ Trial.FixDur = delta;
 
 %% Draw fixation
 
-Screen('DrawTexture',w, session.stimuli.fixation.fixTex);
-Screen('DrawTexture',w, session.stimuli.triggers.fixationTex,[],[0 0 8 1]);
+% Draw frame
 Screen('FrameRect', w, [0 0 0 255*session.params.stimuli.stimContrast], [session.params.stimuli.pos.CTR-400 session.params.stimuli.pos.CTR+400],2);
+% Draw fixation
+Screen('DrawTexture',w, session.stimuli.fixation.fixTex);
+% Draw pixel trigger
+pixelTrigger = double(session.stimuli.triggers.fixation);
+glRasterPos2d(10, 1);
+glDrawPixels(size(pixelTrigger, 2), 1, GL.RGB, GL.UNSIGNED_BYTE, uint8(pixelTrigger));
+
 
 %% Display fixation
 
-% Send TTL at the next register write
-sendTriggers(session.triggers,Trial,'fix');
+% wait until expected display time is reached
+while 1
+    Datapixx('RegWrRd');
+    t_now = Datapixx('GetTime');
+    lapse = t_now-Trial.ImTime;
+    if lapse > session.params.timing.ImDurForFlip
+        break % break one frame before target frame
+    end
+end
 
-% Register write exactly when the pixels appear on screen
-pixelTrigger = double([session.stimuli.triggers.fixation(:,:,1);session.stimuli.triggers.fixation(:,:,2);session.stimuli.triggers.fixation(:,:,3)]);
-Datapixx('RegWrPixelSync',pixelTrigger,3);
+sendTriggers(session.triggers,Trial,'fix');  % send TTL at the next register write
 
-Datapixx('SetMarker');               % save the onset of the next register write
-Screen('Flip',w,PsychDataPixx('FastBoxsecsToGetsecs',Trial.ImTime+session.params.timing.ImDur+0.005));
-Datapixx('RegWrRd');                 % must read the register before getting the marker
-Trial.FixTime=Datapixx('GetMarker'); % retrieve the saved timing
+Datapixx('SetMarker');                       % save the onset of the next register write
+Datapixx('RegWrPixelSync',pixelTrigger);     % register write exactly when the pixels appear on screen
+
+Trial.FixTime_ptb = Screen('Flip',w);        % present fixation
+
+Datapixx('RegWrRd');                         % must read the register before getting the marker
+Trial.FixTime = Datapixx('GetMarker');       % retrieve the saved timing from the register
 
 % Calculate the exact timing according to the refresh rate
 delta=Trial.FixTime-Trial.ImTime;

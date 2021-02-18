@@ -27,7 +27,7 @@ if 1/timing.ifi< 115 || 1/timing.ifi> 125                   % abort if refresh r
     error('Screen refresh rate should be set to 120 hz')
 end
 timing.ImFrames = round(timing.ImDur/timing.ifi);
-timing.ImDurForFlip = timing.ifi*(timing.ImFrames-0.5); % remove half frame to make sure the flip timing isn't missed
+timing.ImDurForFlip = timing.ifi*(timing.ImFrames-1); % remove one frame to make sure the flip timing isn't missed
 timing.refreshRate     =  round(1/timing.ifi); %Hz
 
 params.timing = timing;

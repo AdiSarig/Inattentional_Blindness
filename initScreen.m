@@ -7,9 +7,9 @@ screens         =  Screen('Screens');
 screenNumber    =  max(screens);
 bgColour            =  GrayIndex(screenNumber);
 if debug
-    [w, wRect]  =  Screen('OpenWindow',screenNumber, bgColour, [0 0 600 600]);
+    [w, wRect]  =  PsychImaging('OpenWindow',screenNumber, bgColour, [0 0 600 600]);
 else
-    [w, wRect]  =  Screen('OpenWindow',screenNumber, bgColour);
+    [w, wRect]  =  PsychImaging('OpenWindow',screenNumber, bgColour);
     HideCursor;
 end
 
