@@ -6,7 +6,7 @@ if Trial.Response == -1 %no response
     Trial.Accuracy = -1;
     Trial.RT = -1;
 else
-    Trial.RT = Trial.RTfromStart - Trial.ImTime - 0.005; % there is a deviation between markers and the display, stimuli are actually presented 5ms after marker time
+    Trial.RT = Trial.RTfromStart - Trial.ImTime;
     Response=find(Trial.Response);
     if phase==3  % face/house/noise responses
         if Response == session.params.response.face %face stim

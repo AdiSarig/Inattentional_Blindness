@@ -3,11 +3,11 @@ function triggers = initBIO(session)
 
 % triggers' names: 
 
-triggers.BIOSEMI_CODE_START         = 255;
-triggers.BIOSEMI_CODE_SLEEP         = 0;    % main - end of exp
-triggers.BIOSEMI_CODE_END           = 253;
-triggers.TRIGGERS_RECORDING_STARTED = 254;  % main - before practice
-triggers.TRIGGERS_RECORDING_ENDED   = 252;  % main - after end screen
+triggers.EXP_START         = 255; % main - before practice
+triggers.EXP_END           = 254; % main - end of exp
+% triggers.TRIGGERS_RECORDING_STARTED = 253;  
+% triggers.TRIGGERS_RECORDING_ENDED   = 252;
+% triggers.BIOSEMI_CODE_SLEEP         = 0;  
 
 triggers.PHASE_STARTED  = 248;  % runPhase
 triggers.PHASE_ENDED    = 249;  % runPhase
@@ -16,7 +16,7 @@ triggers.BLOCK_INFO     = 247;  % blockInfo
 triggers.BLOCK_ENDED    = 245;  % runBlock - before break
 
 % Trial trigger sequence:
-triggers.Trial_END = 210; % previous trial has ended - same as the start of the next trial - removed
+% triggers.Trial_END = 210; % previous trial has ended - same as the start of the next trial - removed
 triggers.Trial_START = 250; % Stim display trigger - always the same for all trials!
 % trial number 1:72
 triggers.Image_face    = 100; % Image: face
@@ -45,12 +45,6 @@ triggers.Resp_inCorr      = 191; % incorrect
 triggers.RESP_missing     = 198; % No response
 triggers.RESP_ERROR       = 199; % wrong button
 
-% convert to binary for Vpixx digital output
-trigNames = fieldnames(triggers);
-trigBin = convertTriggers(triggers);
-trigBinstruct = cell2struct(trigBin,trigNames);
-triggers = [trigBinstruct triggers];
-
 % trial number 1:72
 trials = num2cell(1:session.params.procedure.numTrials);
 [trialNum(1:session.params.procedure.numTrials).num] = trials{:};
@@ -63,18 +57,18 @@ images = num2cell(111:110+session.params.procedure.numStim);
 discLoc = num2cell(140:144);
 [discLocNum(1:5).loc] = discLoc{:};
 
-trigBin = convertTriggers(trialNum);
-[trialNum(1:session.params.procedure.numTrials).numBin] = trigBin{:};
-
-trigBin = convertTriggers(imageNum);
-[imageNum(1:session.params.procedure.numStim).numBin] = trigBin{:};
-
-trigBin = convertTriggers(discLocNum);
-[discLocNum(1:5).numBin] = trigBin{:};
-
 triggers(1).trialNum   = trialNum;
 triggers(1).imageNum   = imageNum;
 triggers(1).discLocNum = discLocNum;
+
+% Connect to port
+triggers.LPT_address = hex2dec('c010');
+
+triggers.biosemi=io64;
+status=io64(triggers.biosemi);
+if status
+    error('BIOSEMI connection failed');
+end
 
 end
 

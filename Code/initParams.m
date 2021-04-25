@@ -20,7 +20,7 @@ params.screen = screen;
 %% Pathway
 currentFolder = pwd;
 idcs = strfind(currentFolder,filesep);
-params.defaultpath = currentFolder(1:idcs(end)-1);  % should be the folder that containg the codes and stimuli
+params.defaultpath = currentFolder(1:idcs(end)-1);  % should be the folder containg the codes and stimuli
 params.expFolder = 'Code';  % change this according to the folder structure, should be the folder of the experimental codes
 
 %% Timing parameters:
@@ -29,53 +29,52 @@ timing.addFix          =  0.2;                          % maximal time to add to
 timing.ImDur           =  0.1;                          % stimuli duration
 timing.ifi = Screen('GetFlipInterval',w);
 if 1/timing.ifi< 115 || 1/timing.ifi> 125                   % abort if refresh rate isn't 120 hz
-    ResponsePixx('Close');Datapixx('Close');sca
+    sca
     error('Screen refresh rate should be set to 120 hz')
 end
 timing.ImFrames = round(timing.ImDur/timing.ifi);
-timing.ImDurForFlip = timing.ifi*(timing.ImFrames-1); % remove one frame to make sure the flip timing isn't missed
+timing.ImDurForFlip = timing.ifi*(timing.ImFrames-0.5); % remove half a frame to make sure the flip timing isn't missed
 timing.refreshRate     =  round(1/timing.ifi); %Hz
 
 params.timing = timing;
 
 %% Response params
 KbName('UnifyKeyNames');
-% Map response box buttons index as set by ResponsePixx('GetButtons') from left to right
-RespboxLeft        =  1; % Left
-RespboxMiddle      =  3; % 2 from left
-RespboxRight       =  4; % 3 from left
-% Respbox4         =  2; % uncomment if the fourth button is needed
-RespboxTop         =  5; % top button used as esc from info window
+% Map response buttons
+Left        =  KbName('LeftArrow');
+Down        =  KbName('DownArrow');
+Right       =  KbName('RightArrow');
+Exit        =  KbName('ESCAPE');
 
 % map response buttons to experimental conditions
 if strcmp(session.CounterBalanceDisc,'n')
     if strcmp(session.CounterBalanceIm,'n')
-        response.face = RespboxRight;         % face stim
-        response.house = RespboxLeft;         % house stim
-        response.discSame  = RespboxRight;    % disc same orientation
-        response.discDiff  = RespboxLeft;     % disc changed orientation
+        response.face = Right;         % face stim
+        response.house = Left;         % house stim
+        response.discSame  = Right;    % disc same orientation
+        response.discDiff  = Left;     % disc changed orientation
     else
-        response.face = RespboxLeft;          % face stim
-        response.house = RespboxRight;        % house stim
-        response.discSame  = RespboxRight;    % disc same orientation
-        response.discDiff  = RespboxLeft;     % disc changed orientation
+        response.face = Left;          % face stim
+        response.house = Right;        % house stim
+        response.discSame  = Right;    % disc same orientation
+        response.discDiff  = Left;     % disc changed orientation
     end
 else
     if strcmp(session.CounterBalanceIm,'n')
-        response.face = RespboxRight;         % face stim
-        response.house = RespboxLeft;         % house stim
-        response.discSame  = RespboxLeft;     % disc same orientation
-        response.discDiff  = RespboxRight;    % disc changed orientation
+        response.face = Right;         % face stim
+        response.house = Left;         % house stim
+        response.discSame  = Left;     % disc same orientation
+        response.discDiff  = Right;    % disc changed orientation
     else
-        response.face = RespboxLeft;          % face stim
-        response.house = RespboxRight;        % house stim
-        response.discSame  = RespboxLeft;     % disc same orientation
-        response.discDiff  = RespboxRight;    % disc changed orientation
+        response.face = Left;          % face stim
+        response.house = Right;        % house stim
+        response.discSame  = Left;     % disc same orientation
+        response.discDiff  = Right;    % disc changed orientation
     end
 end
 
-response.noise = RespboxMiddle;           % noise stim
-response.abortKey = RespboxTop;           % exit exp
+response.noise = Down;           % noise stim
+response.abortKey = Exit;           % exit exp
 
 params.response = response;
 

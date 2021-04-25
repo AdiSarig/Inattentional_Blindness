@@ -10,9 +10,7 @@ function [Trial] = run_trial(session, Trial, prevTrial)
 
 % L.M., August 2017
 
-global w phase GL
-
-ResponsePixx('StartNow',1); % start response collection
+global w phase
 
 %% Draw STIMULI
 % Draw frame
@@ -35,39 +33,16 @@ Screen('DrawTexture',w, Trial.discTex.n4,[],disc4Loc,[],[], session.params.stimu
 % Photodiode
 % Screen('FillRect', w, [0 0 0], [session.params.stimuli.pos.CTR-351 session.params.stimuli.pos.CTR+351],2);
 
-% Draw pixel trigger
-pixelTrigger = double(session.stimuli.triggers.image);
-glRasterPos2d(session.params.stimuli.pos.CTR(1), session.params.stimuli.pos.CTR(2)-200);
-glDrawPixels(size(pixelTrigger, 2), 1, GL.RGB, GL.UNSIGNED_BYTE, uint8(pixelTrigger));
-
 
 %% Display stimuli
 
-% wait until expected display time is reached
-while 1
-    Datapixx('RegWrRd');
-    t_now = Datapixx('GetTime');
-    if t_now > prevTrial.ExpImTime
-        break % break one frame before target frame
-    end
-end
+Trial.ImTime = Screen('Flip',w,prevTrial.ExpImTime);     % present stimuli
+sendTriggers(session.triggers.biosemi,session.triggers.LPT_address,session.triggers(1).Trial_START);
 
-Datapixx('SetDoutValues', session.triggers(1).Trial_START); % send TTL at the next register write
-
-Datapixx('SetMarker');                                      % save the onset of the next register write
-Datapixx('RegWrPixelSync',pixelTrigger);                    % register write exactly when the pixels appear on screen
-
-Trial.ImTime_ptb = Screen('Flip',w);                        % present stimuli
-
-Datapixx('RegWrRd');                                        % must read the register before getting the marker
-Trial.ImTime = Datapixx('GetMarker');                       % retrieve the saved timing from the register
-
-WaitSecs(0.001);                                            % for triggers to be sent seperatly
-sendTriggers(session.triggers,Trial,'image');               % trial info triggers - sent after the flip
+% send all other triggers
+followupTriggers(session,Trial,'stim')
 
 Trial.FixDur = Trial.ImTime - prevTrial.FixTime;            % calculate the exact fixation duration
-Trial.FixDur_ptb = Trial.ImTime_ptb - prevTrial.FixTime_ptb;% also for ptb timing
-
 
 %% Draw fixation
 
@@ -79,36 +54,20 @@ Screen('DrawTexture',w, session.stimuli.fixation.fixTex);
 % Photodiode:
 % Screen('FillRect', w, [255 255 255], [session.params.stimuli.pos.CTR-351 session.params.stimuli.pos.CTR+351],2);
 
-% Draw pixel trigger
-pixelTrigger = double(session.stimuli.triggers.fixation);
-glRasterPos2d(session.params.stimuli.pos.CTR(1), session.params.stimuli.pos.CTR(2)-200);
-glDrawPixels(size(pixelTrigger, 2), 1, GL.RGB, GL.UNSIGNED_BYTE, uint8(pixelTrigger));
-
-
 %% Display fixation
 
-% wait until expected display time is reached
-while 1
-    Datapixx('RegWrRd');
-    t_now = Datapixx('GetTime');
-    lapse = t_now-Trial.ImTime;
-    if lapse > session.params.timing.ImDurForFlip
-        break % break one frame before target frame
-    end
+Trial.FixTime = Screen('Flip',w,Trial.ImTime+session.params.timing.ImDurForFlip);        % present fixation
+
+switch Trial.ImageType % send TTL
+    case 1
+        sendTriggers(session.triggers.biosemi,session.triggers.LPT_address,session.triggers.Fix_face);
+    case 2
+        sendTriggers(session.triggers.biosemi,session.triggers.LPT_address,session.triggers.Fix_house);
+    case 3
+        sendTriggers(session.triggers.biosemi,session.triggers.LPT_address,session.triggers.Fix_noise);
 end
 
-sendTriggers(session.triggers,Trial,'fix');  % send TTL at the next register write
-
-Datapixx('SetMarker');                       % save the onset of the next register write
-Datapixx('RegWrPixelSync',pixelTrigger);     % register write exactly when the pixels appear on screen
-
-Trial.FixTime_ptb = Screen('Flip',w);        % present fixation
-
-Datapixx('RegWrRd');                         % must read the register before getting the marker
-Trial.FixTime = Datapixx('GetMarker');       % retrieve the saved timing from the register
-
-Trial.ImDur = Trial.FixTime - Trial.ImTime;  % calculate the exact stimuli duration
-Trial.ImDur_ptb = Trial.FixTime_ptb - Trial.ImTime_ptb; % also for ptb timing
+Trial.ImDur = Trial.FixTime - Trial.ImTime;  % calculate the stimuli duration
 
 %% Collect Response
 
@@ -117,22 +76,22 @@ tempFixDur = rand(1)*session.params.timing.addFix + session.params.timing.minFix
 fixFrames = round(tempFixDur/session.params.timing.ifi);
 Trial.ExpImTime = Trial.FixTime + session.params.timing.ifi*(fixFrames-0.5);
 
-% wait until the time limit for two response events (press and release)
-% [Response, RTfromStart] = ResponsePixx('GetLoggedResponses',2,1,session.params.timing.ifi*(fixFrames-0.5)-0.05);
-[Trial.Response, Trial.RTfromStart] = getResponse(session.params.timing.ifi*(fixFrames-0.5)-0.05,session.triggers(1).Resp_START);
-
-% if ~any(Response) %no response
-%     Trial.Response = -1;
-% else              % save only button press and not the release
-%     Trial.Response=Response(1,:);
-%     Trial.RTfromStart = RTfromStart(1);
-% end
+keyIsDown = 0;
+while ~keyIsDown
+    [keyIsDown, Trial.RTfromStart, Trial.Response] = KbCheck;
+    if keyIsDown
+        sendTriggers(session.triggers.biosemi,session.triggers.LPT_address,session.triggers(1).Resp_START);
+    end
+    if GetSecs > Trial.ExpImTime
+        Trial.Response = -1;
+        sendTriggers(session.triggers.biosemi,session.triggers.LPT_address,session.triggers(1).RESP_missing);
+        break
+    end
+end
 
 % decode each trial's logged response based on the response box mapping done at parameters initiation
 [Trial] = saveResponse(session,Trial,phase);
 % send response triggers
-sendTriggers(session.triggers,Trial,'resp');
-
-ResponsePixx('StopNow',1); % stop response collection
+followupTriggers(session,Trial,'resp')
 
 end
