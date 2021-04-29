@@ -2,8 +2,18 @@ function Main()
 
 % -----------------------------------------------------
 % This function runs inattentional blindness experiment.
+% Images of faces and houses are displayed to the subjects while they are
+% engaged with a different task. The distracting task requires noticing
+% whether out of four cut-in-half circles, one is oriented to a different
+% direction. Both are displayed at the same time for a 100 ms followed by a
+% fixation dot during which responses are collected.
+%
+% There are 3 different phases followed by a questionnaire regarding the
+% displayed stimuli. Phase 1 and 2 are as described above. However, in
+% phase 3 subjects are required to answer regarding the displayed images.
 
 % L.M., August 2017
+% A.S., April 2021
 
 % -----------------------------------------------------
 

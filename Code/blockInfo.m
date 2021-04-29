@@ -19,7 +19,7 @@ sendTriggers(session.triggers.biosemi,session.triggers.LPT_address,session.trigg
 % unlimited wait for any response
 [~, Response] = KbWait([], 2);
 
-
+% Get ready countdown
 DrawFormattedText(w,'3' , 'center', 'center', session.params.stimuli.text.colour);
 Screen('Flip',w);
 WaitSecs(1);

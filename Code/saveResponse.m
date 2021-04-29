@@ -1,6 +1,5 @@
 function [Trial] = saveResponse(session,Trial,phase)
-% decode the logged responses based on the response box mapping done at
-% parameters initiation
+% decode the logged responses based on key allocation done in parameters initiation
 
 if Trial.Response == -1 %no response
     Trial.Accuracy = -1;

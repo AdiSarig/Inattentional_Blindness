@@ -1,4 +1,6 @@
 function [Ans] = postPhase(session)
+% Post phase questionnaire. The subjects are asked 6 questions about the
+% stimuli presented at the last phase.
 
 ListenChar(1) % so participants will be able to type
 figure('Position',[0 0 session.params.screen.dim.pix]); % open empty bg figure

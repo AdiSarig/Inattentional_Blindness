@@ -8,8 +8,6 @@ function [Trial] = run_trial(session, Trial, prevTrial)
 % regarding the discs' orientation or the image type. Response collection
 % occurs during fixation presentation.
 
-% L.M., August 2017
-
 global w phase
 
 %% Draw STIMULI
@@ -30,7 +28,7 @@ Screen('DrawTexture',w, Trial.discTex.n3,[],disc3Loc,[],[], session.params.stimu
 disc4Loc = CenterRectOnPointd(session.stimuli.Disc.discSize,position.LRdisc(1),position.LRdisc(2));
 Screen('DrawTexture',w, Trial.discTex.n4,[],disc4Loc,[],[], session.params.stimuli.stimContrast);
 
-% Photodiode
+% Photodiode test
 % Screen('FillRect', w, [0 0 0], [session.params.stimuli.pos.CTR-351 session.params.stimuli.pos.CTR+351],2);
 
 
@@ -42,7 +40,7 @@ sendTriggers(session.triggers.biosemi,session.triggers.LPT_address,session.trigg
 % send all other triggers
 followupTriggers(session,Trial,'stim')
 
-Trial.FixDur = Trial.ImTime - prevTrial.FixTime;            % calculate the exact fixation duration
+Trial.FixDur = Trial.ImTime - prevTrial.FixTime;         % calculate fixation duration
 
 %% Draw fixation
 
@@ -51,12 +49,12 @@ Screen('FrameRect', w, [0 0 0 255*session.params.stimuli.stimContrast], [session
 % Draw fixation
 Screen('DrawTexture',w, session.stimuli.fixation.fixTex);
 
-% Photodiode:
+% Photodiode test
 % Screen('FillRect', w, [255 255 255], [session.params.stimuli.pos.CTR-351 session.params.stimuli.pos.CTR+351],2);
 
 %% Display fixation
 
-Trial.FixTime = Screen('Flip',w,Trial.ImTime+session.params.timing.ImDurForFlip);        % present fixation
+Trial.FixTime = Screen('Flip',w,Trial.ImTime+session.params.timing.ImDurForFlip); % present fixation
 
 switch Trial.ImageType % send TTL
     case 1
@@ -67,7 +65,7 @@ switch Trial.ImageType % send TTL
         sendTriggers(session.triggers.biosemi,session.triggers.LPT_address,session.triggers.Fix_noise);
 end
 
-Trial.ImDur = Trial.FixTime - Trial.ImTime;  % calculate the stimuli duration
+Trial.ImDur = Trial.FixTime - Trial.ImTime;  % calculate stimuli duration
 
 %% Collect Response
 
@@ -89,7 +87,7 @@ while ~keyIsDown
     end
 end
 
-% decode each trial's logged response based on the response box mapping done at parameters initiation
+% decode each trial's logged response based on key allocation done in parameters initiation
 [Trial] = saveResponse(session,Trial,phase);
 % send response triggers
 followupTriggers(session,Trial,'resp')

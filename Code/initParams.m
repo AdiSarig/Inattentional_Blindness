@@ -1,4 +1,5 @@
 function [params] = initParams(session)
+% Initialize session parameters
 
 global w
 
@@ -20,15 +21,15 @@ params.screen = screen;
 %% Pathway
 currentFolder = pwd;
 idcs = strfind(currentFolder,filesep);
-params.defaultpath = currentFolder(1:idcs(end)-1);  % should be the folder containg the codes and stimuli
-params.expFolder = 'Code';  % change this according to the folder structure, should be the folder of the experimental codes
+params.defaultpath = currentFolder(1:idcs(end)-1);  % should be the folder containg the codes stimuli and instructions
+params.expFolder = 'Code';  % change this if changing the folder structure, should be the folder of the experimental codes
 
 %% Timing parameters:
 timing.minFix          =  1.3;                          % minimal time for fixation to appear
 timing.addFix          =  0.2;                          % maximal time to add to fixation (total: 1.3-1.5 sec)
 timing.ImDur           =  0.1;                          % stimuli duration
 timing.ifi = Screen('GetFlipInterval',w);
-if 1/timing.ifi< 115 || 1/timing.ifi> 125                   % abort if refresh rate isn't 120 hz
+if 1/timing.ifi< 115 || 1/timing.ifi> 125               % abort if refresh rate isn't 120 hz
     sca
     error('Screen refresh rate should be set to 120 hz')
 end
@@ -74,12 +75,12 @@ else
 end
 
 response.noise = Down;           % noise stim
-response.abortKey = Exit;           % exit exp
+response.abortKey = Exit;        % exit exp
 
 params.response = response;
 
 %% Initialize procedure
-procedure = load('PracList.mat');         % five practice trials, only with noise
+procedure = load('PracList.mat');         % one block of practice trials, only with noise
 procedure.numBlocks = 5;
 procedure.numTrials = 72;
 procedure.numStim = 12;                   % number of different stimuli for each type (face/house/noise); must be multiplication of 4 for initTrialList
@@ -108,7 +109,7 @@ params.procedure = procedure;
 
 %% Stimuli
 stimuli.stimContrast = 0.4;
-stimuli.stimFolder = 'stimuli';                % change this according to the folder structure
+stimuli.stimFolder = 'stimuli';                % change this if changing the folder structure
 stimuli.pos.CTR = round(screen.rect([3,4])/2); % center of the screen in pixels
 stimuli.pos.ULdisc = stimuli.pos.CTR-150;      % the four discs' positions
 stimuli.pos.URdisc = [stimuli.pos.CTR(1)+150 stimuli.pos.CTR(2)-150];

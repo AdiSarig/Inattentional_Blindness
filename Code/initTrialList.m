@@ -3,7 +3,8 @@ function  [trialList] = initTrialList(procedure)
 % The script below is based on the one used for the Biderman & Mudrik,
 % 2017 study.
 
-% This script creates trial lists for inattentional blindness with two orthogonal tasks (face/house/noise X changed/unchanges disc orientation)
+% This script creates trial lists for inattentional blindness with two 
+% orthogonal tasks (face/house/noise X changed/unchanges disc orientation)
 % numTrials must be multiplication of numStim and of 4
 
 % L.M., August 2017

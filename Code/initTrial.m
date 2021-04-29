@@ -1,5 +1,6 @@
 function [Trial] = initTrial(session,trialParam,phase)
 % Initiate one trial based on trial parameters and current phase
+
 Trial.TrialNum = [];
 
 Trial.ImageType       = trialParam(1); % 1=face, 2=house, 3=noise
@@ -30,11 +31,6 @@ Trial.ImTime         = [];
 Trial.ImDur          = [];
 Trial.FixTime        = [];
 Trial.FixDur         = [];
-
-% Trial.ImTime_ptb     = [];
-% Trial.ImDur_ptb      = [];
-% Trial.FixTime_ptb    = [];
-% Trial.FixDur_ptb     = [];
 
 % determine accuracy based on phase number - phase 3 the task is to identify the image type,
 % in all other phases the task is to identify whether the discs changed orientation

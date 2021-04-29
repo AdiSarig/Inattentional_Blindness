@@ -1,9 +1,10 @@
 function [session] = runBlock(session,phase,block)
+% Run each block, save the results and allow a self paced break
 
 global w
 
 %% Assign trial list
-if phase==0
+if phase==0 % practice block
     trialList=session.params.procedure.PracList;
 else
     trialList=session.Phase(phase).phaseTrialList(:,:,block);
@@ -30,10 +31,9 @@ if Response(session.params.response.abortKey)
 end
 
 %% Start block
-% synchronize system and vpixx clocks
 if phase~=0
     session.Phase(phase).Blocks(block).startBlock = GetSecs;
-    prevTrial.FixTime = session.Phase(phase).Blocks(block).startBlock;
+    prevTrial.FixTime = session.Phase(phase).Blocks(block).startBlock; % starting time saved as previous trial for the first trial to run proparly
 else
     prevTrial.FixTime = GetSecs; % starting time saved as previous trial for the first trial to run proparly
 end
@@ -42,7 +42,8 @@ sendTriggers(session.triggers.biosemi,session.triggers.LPT_address,session.trigg
 
 Screen('Flip',w); % remove block info
 
-prevTrial.ExpImTime = prevTrial.FixTime + rand(1)*session.params.timing.addFix + session.params.timing.minFix; % generate the expected timing of the first stimulus
+% create the expected timing of the first stimulus
+prevTrial.ExpImTime = prevTrial.FixTime + rand(1)*session.params.timing.addFix + session.params.timing.minFix;
 
 %% Run block
 for trialnum=1:ntrials  
@@ -62,7 +63,7 @@ if phase~=0 % don't save practice data
     lastFixOffset = Screen('Flip',w,Trials(end).ExpImTime);
     Trials(end).FixDur = lastFixOffset - Trials(end).ImTime;
     
-    % remove experiment starting time from timings
+    % remove phase starting time from timings
     ImTimeCell             = num2cell([Trials.ImTime] - session.Phase(phase).startExp);
     [Trials.ImTime]        = ImTimeCell{:};
     FixTimeCell            = num2cell([Trials.FixTime] - session.Phase(phase).startExp);
@@ -70,7 +71,7 @@ if phase~=0 % don't save practice data
     ExpImTimeCell          = num2cell([Trials.ExpImTime] - session.Phase(phase).startExp);
     [Trials.ExpImTime]     = ExpImTimeCell{:};
     RTfromStartCell        = num2cell([Trials.RTfromStart] - session.Phase(phase).startExp);
-    RTfromStartCell([Trials.RTfromStart]<0)={-1};
+    RTfromStartCell([Trials.RTfromStart]<0) = {-1};
     [Trials.RTfromStart]   = RTfromStartCell{:};
     
     % save trials into session struct
@@ -85,7 +86,7 @@ if block ~= 5 % break before starting a new block
     Screen('DrawTexture',w, ExpBreakTex);
     Screen('Flip',w);
     KbWait([],2);
-else
+else % after the last block - call the experimenter. Should explain the post phase questionnaire
     ExpBreak = imread(sprintf('%s%c%s%cbreak_end_of_phase.tif',session.params.defaultpath,filesep,session.params.stimuli.stimFolder,filesep));
     ExpBreakTex =  Screen('MakeTexture',w,ExpBreak);
     Screen('DrawTexture',w, ExpBreakTex);
