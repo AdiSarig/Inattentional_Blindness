@@ -23,10 +23,10 @@ triggers.Image_face    = 100; % Image: face
 triggers.Image_house   = 101; % Image: house
 triggers.Image_noise   = 102; % Image: noise
 % image number 1:12    111:122
-triggers.Disc_vertical   = 130; % Disc: vertical
-triggers.Disc_horizontal = 131; % Disc: horizontal
-triggers.Disc_same       = 132; % Disc: all the same orientation
-triggers.Disc_diff       = 133; % Disc: one with different orientation
+triggers.Disc_vertical   = 130; % Disc: vertical (1)
+triggers.Disc_horizontal = 131; % Disc: horizontal (2)
+triggers.Disc_same       = 132; % Disc: all the same orientation (1)
+triggers.Disc_diff       = 133; % Disc: one with different orientation (2)
 % disc location 0:4 (total range: 140:144)
 
 triggers.Fix_face  = 150; % fixation when image is face
