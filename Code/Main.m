@@ -62,7 +62,12 @@ end
 
 %% Save data
 fileName = sprintf('..%cdata%cIB_Sub_%d',filesep,filesep,session.subjnum);
-save(fileName,'session');
+try
+    save(fileName,'session');
+catch
+    mkdir(sprintf('..%cdata',filesep));
+    save(fileName,'session');
+end
 
 %% Thank you screen
 endScreen = imread(session.params.procedure.instructions.End);

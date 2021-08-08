@@ -9,7 +9,12 @@ stimuli.fixation.fixTex = Screen('MakeTexture',w,stimuli.fixation.fix);
 
 % Pixel triggers - for Vpixx to identify and mark the timing of the stimuli being presented.
 % Should be at least 8 pixels. Here it is 24 pixels later divided into 3 different triggers.
-bg = round(params.screen.bgColour);
+if params.screen.bgColour < 1
+    bg = round(params.screen.bgColour*255);
+else
+    bg = round(params.screen.bgColour);
+end
+
 vpix_trig=uint8([bg+2 bg-2 bg+2 bg-2 bg+2 bg-2 bg+2 bg-2,...
     bg+2 bg-3 bg+2 bg-3 bg+2 bg-3 bg+2 bg-3,...
     bg+3 bg-2 bg+3 bg-2 bg+3 bg-2 bg+3 bg-2;...
