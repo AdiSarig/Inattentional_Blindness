@@ -81,7 +81,7 @@ params.response = response;
 
 %% Initialize procedure
 procedure = load('PracList.mat');         % five practice trials, only with noise
-procedure.numBlocks = 5;
+procedure.numBlocks = 8;
 procedure.numTrials = 72;
 procedure.numStim = 12;                   % number of different stimuli for each type (face/house/noise); must be multiplication of 4 for initTrialList
 procedure.infoFolder = 'instructions';

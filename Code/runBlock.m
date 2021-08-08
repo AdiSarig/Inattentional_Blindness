@@ -95,7 +95,7 @@ Datapixx('SetDoutValues', session.triggers(1).BLOCK_ENDED);
 Datapixx('RegWrRd');
 WaitSecs(0.001);
 
-if block ~= 5 % break before starting a new block
+if block ~= session.params.procedure.numBlocks % break before starting a new block
     ResponsePixx('StartNow',1); % start response collection
     ExpBreak = imread(sprintf('%s%c%s%cbreak.tif',session.params.defaultpath,filesep,session.params.stimuli.stimFolder,filesep));
     ExpBreakTex =  Screen('MakeTexture',w,ExpBreak);
