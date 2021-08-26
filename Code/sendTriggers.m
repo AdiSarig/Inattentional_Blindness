@@ -9,18 +9,6 @@ if strcmp(partInTrial,'image')
     Datapixx('RegWrRd');
     WaitSecs(0.001);
     
-    % Image type
-    switch Trial.ImageType
-        case 1
-            Datapixx('SetDoutValues', triggers(1).Image_face);
-        case 2
-            Datapixx('SetDoutValues', triggers(1).Image_house);
-        case 3
-            Datapixx('SetDoutValues', triggers(1).Image_noise);
-    end
-    Datapixx('RegWrRd');
-    WaitSecs(0.001);
-    
     % image number 1:12    111:122
     Datapixx('SetDoutValues', triggers(1).imageNum(Trial.ImageNum).numBin);
     Datapixx('RegWrRd');

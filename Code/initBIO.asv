@@ -16,23 +16,15 @@ triggers.BLOCK_INFO     = 247;  % blockInfo
 triggers.BLOCK_ENDED    = 245;  % runBlock - before break
 
 % Trial trigger sequence:
-triggers.Trial_END = 251; % Canceled! previous trial has ended - same as the start of the next trial
+triggers.Trial_END = 210; % Canceled! previous trial has ended - same as the start of the next trial
 triggers.Trial_START = 250; % Canceled! Stim display trigger - always the same for all trials
 
-% stimuli - phase 0
-triggers.Image_noise_p0   = 202; % Image: noise
-% stimuli - phase 1
-triggers.Image_face_p1    = 210; % Image: face
-triggers.Image_house_p1   = 211; % Image: house
-triggers.Image_noise_p1   = 212; % Image: noise
-% stimuli - phase 2
-triggers.Image_face_p2    = 220; % Image: face
-triggers.Image_house_p2   = 221; % Image: house
-triggers.Image_noise_p2   = 222; % Image: noise
-% stimuli - phase 3
-triggers.Image_face_p3    = 230; % Image: face
-triggers.Image_house_p3   = 231; % Image: house
-triggers.Image_noise_p3   = 232; % Image: noise
+triggers.Image_face    = 200; % Image: face - aware
+triggers.Image_house   = 201; % Image: house - aware
+triggers.Image_noise   = 202; % Image: noise - aware
+triggers.Image_face    = 210; % Image: face - unaware
+triggers.Image_house   = 211; % Image: house - unaware
+triggers.Image_noise   = 212; % Image: noise - unaware
 
 % trial number 1:72
 % image number 1:12    111:122

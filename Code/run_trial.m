@@ -40,6 +40,38 @@ pixelTrigger = double(session.stimuli.triggers.image);
 glRasterPos2d(session.params.stimuli.pos.CTR(1), session.params.stimuli.pos.CTR(2)-200);
 glDrawPixels(size(pixelTrigger, 2), 1, GL.RGB, GL.UNSIGNED_BYTE, uint8(pixelTrigger));
 
+%% Set EEG trigger value
+switch phase
+    case 0 % practice block
+        image_trig = session.triggers(1).Image_noise_p0;
+    case 1
+        switch Trial.ImageType
+            case 1
+                image_trig = session.triggers(1).Image_face_p1;
+            case 2
+                image_trig = session.triggers(1).Image_house_p1;
+            case 3
+                image_trig = session.triggers(1).Image_noise_p1;
+        end
+    case 2
+        switch Trial.ImageType
+            case 1
+                image_trig = session.triggers(1).Image_face_p2;
+            case 2
+                image_trig = session.triggers(1).Image_house_p2;
+            case 3
+                image_trig = session.triggers(1).Image_noise_p2;
+        end
+    case 3
+        switch Trial.ImageType
+            case 1
+                image_trig = session.triggers(1).Image_face_p3;
+            case 2
+                image_trig = session.triggers(1).Image_house_p3;
+            case 3
+                image_trig = session.triggers(1).Image_noise_p3;
+        end
+end
 
 %% Display stimuli
 
@@ -52,7 +84,7 @@ while 1
     end
 end
 
-Datapixx('SetDoutValues', session.triggers(1).Trial_START); % send TTL at the next register write
+Datapixx('SetDoutValues', image_trig); % send TTL at the next register write
 
 Datapixx('SetMarker');                                      % save the onset of the next register write
 Datapixx('RegWrPixelSync',pixelTrigger);                    % register write exactly when the pixels appear on screen
