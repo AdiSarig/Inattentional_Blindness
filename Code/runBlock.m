@@ -25,6 +25,14 @@ counttrials = num2cell(1:ntrials);
 
 % an option to stop the experiment without saving
 if Response(session.params.response.abortKey)
+    % Save data
+    fileName = sprintf('..%cdata%cIB_Sub_%d_partial',filesep,filesep,session.subjnum);
+    try
+        save(fileName,'session');
+    catch
+        mkdir(sprintf('..%cdata',filesep));
+        save(fileName,'session');
+    end
     ResponsePixx('Close');Datapixx('Close');sca
     error('Exp stopped running');
 end
