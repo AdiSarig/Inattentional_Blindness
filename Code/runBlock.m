@@ -128,5 +128,50 @@ else
     ResponsePixx('StopNow',1); % stop response collection
 end
 
+%% Check practice accuracy and run again if needed
+if phase == 0
+    run_practice_again = 1;
+    while run_practice_again % run practice until accuracy is high enough
+        accuracy_vec = [Trials.Accuracy];
+        practice_accuracy = mean(accuracy_vec==1)*100; % calculate accuracy (misses removed)
+        accuracy_prompt = ['Accuracy in practice block is: ' num2str(practice_accuracy) '%. Continue?'];
+        DrawFormattedText(w,accuracy_prompt , 'center', session.params.stimuli.pos.CTR(2)-200, session.params.stimuli.text.colour);
+        
+        rerun = imread(session.params.procedure.instructions.rerun_practice); % response box pressing instructions
+        rerun = imresize(rerun,0.5);
+        rerunTex =  Screen('MakeTexture',w,rerun);
+        Screen('DrawTexture',w, rerunTex);
+        
+        Screen('Flip',w, PsychDataPixx('FastBoxsecsToGetsecs',Trials(end).ExpImTime));
+
+        ResponsePixx('StartNow',1); % start response collection
+        [Response] = ResponsePixx('GetLoggedResponses',2); % unlimited wait for any response
+        Response = Response(1,:);
+        ResponsePixx('StopNow',1); % stop response collection
+        
+        if find(Response) == 1 % left button
+            run_practice_again = 0;
+        else % run practice block again
+            DrawFormattedText(w,'3' , 'center', 'center', session.params.stimuli.text.colour);
+            Screen('Flip',w);
+            WaitSecs(1);
+            DrawFormattedText(w,'2' , 'center', 'center', session.params.stimuli.text.colour);
+            Screen('Flip',w);
+            WaitSecs(1);
+            DrawFormattedText(w,'1' , 'center', 'center', session.params.stimuli.text.colour);
+            Screen('Flip',w);
+            WaitSecs(1);
+            
+            [prevTrial.FixTime_ptb, prevTrial.FixTime] = PsychDataPixx('GetPreciseTime'); % starting time saved as previous trial for the first trial to run proparly
+            prevTrial.ExpImTime = prevTrial.FixTime + rand(1)*session.params.timing.addFix + session.params.timing.minFix; % generate the expected timing of the first stimulus
+            for trialnum=1:ntrials
+                % Present stimuli
+                Trials(trialnum)=run_trial(session,Trials(trialnum),prevTrial);
+                prevTrial = Trials(trialnum); % save previous trial for using the expected time for the image to appear and to calculate the duration from the delta (see run_trial)
+            end % of trial loop
+        end
+    end
+end
+
 end
 

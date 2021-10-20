@@ -104,6 +104,7 @@ else
     end
 end
 procedure.instructions.End   =  sprintf('%s%c%s%cEnd.tif',params.defaultpath,filesep,procedure.infoFolder,filesep);
+procedure.instructions.rerun_practice   =  sprintf('%s%c%s%crerunPractice.tif',params.defaultpath,filesep,procedure.infoFolder,filesep);
 
 params.procedure = procedure;
 
