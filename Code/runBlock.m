@@ -23,7 +23,7 @@ counttrials = num2cell(1:ntrials);
 %% Starting Message
 [~,Response] = blockInfo(session);
 
-% an option to stop the experiment without saving
+% an option to stop the experiment
 if Response(session.params.response.abortKey)
     % Save data
     fileName = sprintf('..%cdata%cIB_Sub_%d_partial',filesep,filesep,session.subjnum);
@@ -101,6 +101,15 @@ if phase~=0 % don't save practice data
     
     % save trials into session struct
     session.Phase(phase).Blocks(block).trials   = Trials;
+    
+    % save session struct into file
+    fileName = sprintf('..%cdata%cIB_Sub_%d',filesep,filesep,session.subjnum);
+    try
+        save(fileName,'session');
+    catch
+        mkdir(sprintf('..%cdata',filesep));
+        save(fileName,'session');
+    end
 end
 
 Datapixx('SetDoutValues', session.triggers(1).BLOCK_ENDED);
