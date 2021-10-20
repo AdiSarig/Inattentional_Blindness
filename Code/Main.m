@@ -27,9 +27,10 @@ ResponsePixx('Open');
 Datapixx('EnableDinDebounce');
 Datapixx('RegWr');
 
-doutValue = bin2dec('0000 0000 0000 0000 0000 0000'); % initialize digital output
-Datapixx('SetDoutValues', doutValue);
+% initialize digital output
+Datapixx('SetDoutValues', 0);
 Datapixx('RegWr');
+WaitSecs(0.004);
 
 
 %% Initialize session
@@ -54,6 +55,10 @@ Priority(priorityLevel);
 
 Datapixx('SetDoutValues', session.triggers(1).TRIGGERS_RECORDING_STARTED);
 Datapixx('RegWr');
+WaitSecs(0.004);
+Datapixx('SetDoutValues', 0);
+Datapixx('RegWrRd');
+WaitSecs(0.004);
 
 %% RUN EXPERIMENT
 for phase=0:3
@@ -61,6 +66,7 @@ for phase=0:3
 end
 
 %% Save data
+
 fileName = sprintf('..%cdata%cIB_Sub_%d',filesep,filesep,session.subjnum);
 try
     save(fileName,'session');
@@ -78,8 +84,10 @@ WaitSecs(3);
 KbWait;
 Datapixx('SetDoutValues', session.triggers(1).TRIGGERS_RECORDING_ENDED);
 Datapixx('RegWr');
+WaitSecs(0.004);
 Datapixx('SetDoutValues', session.triggers(1).BIOSEMI_CODE_SLEEP);
 Datapixx('RegWr');
+WaitSecs(0.004);
 ResponsePixx('Close');
 Screen('CloseAll');
 ListenChar(0);

@@ -49,7 +49,10 @@ end
 
 Datapixx('SetDoutValues', session.triggers(1).BLOCK_STARTED); % send TTL of block start at the next register write
 Datapixx('RegWrRd');
-WaitSecs(0.001);
+WaitSecs(0.004);
+Datapixx('SetDoutValues', 0);
+Datapixx('RegWrRd');
+WaitSecs(0.004);
 
 Screen('Flip',w); % remove block info
 
@@ -61,6 +64,7 @@ for trialnum=1:ntrials
     Trials(trialnum)=run_trial(session,Trials(trialnum),prevTrial);
     prevTrial = Trials(trialnum); % save previous trial for using the expected time for the image to appear and to calculate the duration from the delta (see run_trial)
 end % of trial loop
+
 
 %% Save block
 if phase~=0 % don't save practice data
@@ -101,7 +105,10 @@ end
 
 Datapixx('SetDoutValues', session.triggers(1).BLOCK_ENDED);
 Datapixx('RegWrRd');
-WaitSecs(0.001);
+WaitSecs(0.004);
+Datapixx('SetDoutValues', 0);
+Datapixx('RegWrRd');
+WaitSecs(0.004);
 
 if block ~= session.params.procedure.numBlocks % break before starting a new block
     ResponsePixx('StartNow',1); % start response collection

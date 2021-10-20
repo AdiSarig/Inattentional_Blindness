@@ -19,7 +19,10 @@ while 1
         % Requested amount of data available: Sent response trigger and exit loop.
         Datapixx('SetDoutValues', trigger); % send TTL at the next register write
         Datapixx('RegWrRd');
-        WaitSecs(0.001);
+        WaitSecs(0.004);
+        Datapixx('SetDoutValues', 0);
+        Datapixx('RegWrRd');
+        WaitSecs(0.004);
         break;
     else
         % Insufficient amount. If this is a polling request, we

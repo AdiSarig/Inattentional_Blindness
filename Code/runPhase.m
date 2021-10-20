@@ -8,7 +8,10 @@ if phase==0
     PsychDataPixx('GetPreciseTime');        % sync system and Vpixx clocks
     Datapixx('SetDoutValues', session.triggers(1).PHASE_STARTED);
     Datapixx('RegWr');
-    WaitSecs(0.001);
+    WaitSecs(0.004);
+    Datapixx('SetDoutValues', 0);
+    Datapixx('RegWrRd');
+    WaitSecs(0.004);
     [session] = runBlock(session,phase,1);
 else
     %% PREPARE THE TRIAL MATRIX
@@ -18,7 +21,10 @@ else
     [session.Phase(phase).startExpPtb,session.Phase(phase).startExpVpixx] = PsychDataPixx('GetPreciseTime'); % synchronize system and vpixx clocks and get their values
     Datapixx('SetDoutValues', session.triggers(1).PHASE_STARTED);
     Datapixx('RegWr');
-    WaitSecs(0.001);
+    WaitSecs(0.004);
+    Datapixx('SetDoutValues', 0);
+    Datapixx('RegWrRd');
+    WaitSecs(0.004);
     
     %% Run blocks
     for block=1:size(session.Phase(phase).phaseTrialList,3)
@@ -35,7 +41,10 @@ end
 
 Datapixx('SetDoutValues', session.triggers(1).PHASE_ENDED);
 Datapixx('RegWr');
-WaitSecs(0.001);
+WaitSecs(0.004);
+Datapixx('SetDoutValues', 0);
+Datapixx('RegWrRd');
+WaitSecs(0.004);
 
 end
 

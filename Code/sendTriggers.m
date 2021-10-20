@@ -4,15 +4,26 @@ global phase
 
 %----Image triggers-----
 if strcmp(partInTrial,'image')
+    % initialize output
+    Datapixx('SetDoutValues', 0);
+    Datapixx('RegWrRd');
+    WaitSecs(0.004);
+    
     % trial number 1:72
     Datapixx('SetDoutValues', triggers(1).trialNum(Trial.TrialNum).numBin);
     Datapixx('RegWrRd');
-    WaitSecs(0.001);
+    WaitSecs(0.004);
+    Datapixx('SetDoutValues', 0);
+    Datapixx('RegWrRd');
+    WaitSecs(0.004);
     
     % image number 1:12    111:122
     Datapixx('SetDoutValues', triggers(1).imageNum(Trial.ImageNum).numBin);
     Datapixx('RegWrRd');
-    WaitSecs(0.001);
+    WaitSecs(0.004);
+    Datapixx('SetDoutValues', 0);
+    Datapixx('RegWrRd');
+    WaitSecs(0.004);
     
     % discs orientation
     switch Trial.DiscOrientation
@@ -22,7 +33,10 @@ if strcmp(partInTrial,'image')
             Datapixx('SetDoutValues', triggers(1).Disc_horizontal);
     end
     Datapixx('RegWrRd');
-    WaitSecs(0.001);
+    WaitSecs(0.004);
+    Datapixx('SetDoutValues', 0);
+    Datapixx('RegWrRd');
+    WaitSecs(0.004);
     
     % discs rotation (change orientation of one disc)
     switch Trial.DiscRotation
@@ -32,11 +46,18 @@ if strcmp(partInTrial,'image')
             Datapixx('SetDoutValues', triggers(1).Disc_diff);
     end
     Datapixx('RegWrRd');
-    WaitSecs(0.001);
+    WaitSecs(0.004);
+    Datapixx('SetDoutValues', 0);
+    Datapixx('RegWrRd');
+    WaitSecs(0.004);
     
     % disc location 0:4 (total range: 140:144)
     Datapixx('SetDoutValues', triggers(1).discLocNum(Trial.DiscLocation+1).numBin);
     Datapixx('RegWrRd');
+    WaitSecs(0.004);
+    Datapixx('SetDoutValues', 0);
+    Datapixx('RegWrRd');
+    WaitSecs(0.004);
     
     
 %----Fixation triggers-----
@@ -73,13 +94,20 @@ elseif strcmp(partInTrial,'resp')
         end
     end
     Datapixx('RegWrRd');
-    WaitSecs(0.001);
+    WaitSecs(0.004);
+    Datapixx('SetDoutValues', 0);
+    Datapixx('RegWrRd');
+    WaitSecs(0.004);
     
     % response accuracy
     if Trial.Response == 99
         Datapixx('SetDoutValues', triggers(1).RESP_ERROR);
         Datapixx('RegWrRd');
-        WaitSecs(0.001);
+        WaitSecs(0.004);
+        Datapixx('SetDoutValues', 0);
+        Datapixx('RegWrRd');
+        WaitSecs(0.004);
+        
         Datapixx('SetDoutValues', triggers(1).Resp_inCorr);
     else
         switch Trial.Accuracy
@@ -92,7 +120,10 @@ elseif strcmp(partInTrial,'resp')
         end
     end
     Datapixx('RegWrRd');
-    WaitSecs(0.001);
+    WaitSecs(0.004);
+    Datapixx('SetDoutValues', 0);
+    Datapixx('RegWrRd');
+    WaitSecs(0.004);
 end
 
 
