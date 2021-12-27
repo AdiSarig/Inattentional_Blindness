@@ -21,7 +21,7 @@ counttrials = num2cell(1:ntrials);
 [Trials(1:ntrials).TrialNum] = counttrials{:};
 
 %% Starting Message
-[~,Response] = blockInfo(session);
+[~,Response] = blockInfo(session, block);
 
 % an option to stop the experiment
 if Response(session.params.response.abortKey)
@@ -113,7 +113,7 @@ if phase~=0 % don't save practice data
     session.Phase(phase).Blocks(block).trials   = Trials;
     
     % save session struct into file
-    fileName = sprintf('..%cdata%cIB_Sub_%d',filesep,filesep,session.subjnum);
+    fileName = sprintf('..%cdata%cIB_Sub_%d_partial',filesep,filesep,session.subjnum);
     try
         save(fileName,'session');
     catch

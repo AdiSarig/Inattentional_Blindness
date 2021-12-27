@@ -1,13 +1,14 @@
-function Main()
-
 % -----------------------------------------------------
-% This function runs inattentional blindness experiment.
+% This script runs inattentional blindness experiment.
 
 % L.M., August 2017
 % github test
 % -----------------------------------------------------
 
 %%
+clear;
+clc;
+
 global phase debug w
 
 debug = 0;
@@ -62,7 +63,10 @@ WaitSecs(0.004);
 
 %% RUN EXPERIMENT
 for phase=0:3
-    [session] = runPhase(session,phase);
+    [session,is_error] = runPhase(session,phase);
+    if is_error
+        break
+    end
 end
 
 %% Save data
@@ -76,20 +80,21 @@ catch
 end
 
 %% Thank you screen
-endScreen = imread(session.params.procedure.instructions.End);
-endScreenTex = Screen('MakeTexture',w,endScreen);
-Screen('DrawTexture',w,endScreenTex);
-Screen('Flip',w);
-WaitSecs(3);
-KbWait;
-Datapixx('SetDoutValues', session.triggers(1).TRIGGERS_RECORDING_ENDED);
-Datapixx('RegWr');
-WaitSecs(0.004);
-Datapixx('SetDoutValues', session.triggers(1).BIOSEMI_CODE_SLEEP);
-Datapixx('RegWr');
-WaitSecs(0.004);
+if ~is_error
+    endScreen = imread(session.params.procedure.instructions.End);
+    endScreenTex = Screen('MakeTexture',w,endScreen);
+    Screen('DrawTexture',w,endScreenTex);
+    Screen('Flip',w);
+    WaitSecs(3);
+    KbWait;
+    Datapixx('SetDoutValues', session.triggers(1).TRIGGERS_RECORDING_ENDED);
+    Datapixx('RegWr');
+    WaitSecs(0.004);
+    Datapixx('SetDoutValues', session.triggers(1).BIOSEMI_CODE_SLEEP);
+    Datapixx('RegWr');
+    WaitSecs(0.004);
+end
 ResponsePixx('Close');
 Screen('CloseAll');
 ListenChar(0);
 
-end

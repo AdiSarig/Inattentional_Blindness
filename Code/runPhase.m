@@ -1,7 +1,8 @@
-function [session] = runPhase(session,phase)
+function [session,is_error] = runPhase(session,phase)
 
 global w
 
+is_error = 0;
 session.stimuli = initStimuli(session.params); % initialize all stimuli textures
 
 if phase==0
@@ -28,7 +29,12 @@ else
     
     %% Run blocks
     for block=1:size(session.Phase(phase).phaseTrialList,3)
-        [session] = runBlock(session,phase,block);
+        try
+            [session] = runBlock(session,phase,block);
+        catch
+            is_error = 1;
+            return
+        end
     end
 end
 
