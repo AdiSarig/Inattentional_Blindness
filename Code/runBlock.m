@@ -62,7 +62,17 @@ prevTrial.ExpImTime = prevTrial.FixTime + rand(1)*session.params.timing.addFix +
 for trialnum=1:ntrials  
     % Present stimuli
     Trials(trialnum)=run_trial(session,Trials(trialnum),prevTrial);
+    
+    % Stop for maintenance
+    [keyIsDown, ~, keyCode] = KbCheck;
+    if keyIsDown
+        if strcmpi(KbName(keyCode),'m') % m for maintenance
+            Trials(trialnum) = stopForMaintenance(session, Trials(trialnum));
+        end
+    end
+    
     prevTrial = Trials(trialnum); % save previous trial for using the expected time for the image to appear and to calculate the duration from the delta (see run_trial)
+    
 end % of trial loop
 
 

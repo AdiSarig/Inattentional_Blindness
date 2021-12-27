@@ -15,10 +15,10 @@ triggers.BLOCK_STARTED  = 246;  % runBlock - after timing calibration
 triggers.BLOCK_INFO     = 247;  % blockInfo
 triggers.BLOCK_ENDED    = 245;  % runBlock - before break
 
-% Trial trigger sequence:
-triggers.Trial_END = 251; % Canceled! previous trial has ended - same as the start of the next trial
-triggers.Trial_START = 250; % Canceled! Stim display trigger - always the same for all trials
+triggers.maintenance_break = 250;
+triggers.maintenance_break_over = 251;
 
+% Trial trigger sequence:
 % stimuli - phase 0
 triggers.Image_noise_p0   = 202; % Image: noise
 % stimuli - phase 1

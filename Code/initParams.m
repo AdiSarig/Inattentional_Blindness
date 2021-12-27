@@ -82,6 +82,7 @@ params.response = response;
 %% Initialize procedure
 procedure = load('PracList.mat');         % five practice trials, only with noise
 procedure.numBlocks = 8;
+procedure.numPhases = 3;
 procedure.numTrials = 72;
 procedure.numStim = 12;                   % number of different stimuli for each type (face/house/noise); must be multiplication of 4 for initTrialList
 procedure.infoFolder = 'instructions';
@@ -105,6 +106,8 @@ else
 end
 procedure.instructions.End   =  sprintf('%s%c%s%cEnd.tif',params.defaultpath,filesep,procedure.infoFolder,filesep);
 procedure.instructions.rerun_practice   =  sprintf('%s%c%s%crerunPractice.tif',params.defaultpath,filesep,procedure.infoFolder,filesep);
+
+procedure.instructions.maintenance   =  sprintf('%s%c%s%cmaintenance.tif',params.defaultpath,filesep,procedure.infoFolder,filesep);
 
 params.procedure = procedure;
 
