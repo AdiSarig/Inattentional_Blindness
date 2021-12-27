@@ -1,4 +1,4 @@
-function [InfoTiming,Response] = blockInfo(session)
+function [InfoTiming,Response] = blockInfo(session, block)
 % display block info based on phase and counterbalancing and wait for
 % response
 
@@ -45,6 +45,18 @@ else % instructions for phase 3: answer regarding the images
     Response=Response(1,:);
 end
 
+% display progress indication
+if phase == 0
+    progress_indication = 'Practice session';
+else
+    progress_indication = sprintf('Block %d / %d, Phase %d / %d',...
+        block, session.params.procedure.numBlocks, phase, session.params.procedure.numPhases);
+end
+DrawFormattedText(w,progress_indication , 'center', 'center', session.params.stimuli.text.colour);
+Screen('Flip',w);
+WaitSecs(3);
+
+% get ready to start
 DrawFormattedText(w,'3' , 'center', 'center', session.params.stimuli.text.colour);
 Screen('Flip',w);
 WaitSecs(1);
